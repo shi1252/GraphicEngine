@@ -1,7 +1,8 @@
 #pragma once
 #include <math.h>
-
-#define PI 3.141592f
+#include <stdio.h>
+#include <vector>
+#include "BaseMath.h"
 
 struct Vector2
 {
@@ -75,21 +76,21 @@ struct Vector2
 	{
 		return (this->x*v.y - this->y*v.x);
 	}
-	float Distance() const
+	float Length() const
 	{
 		return sqrtf(x * x + y * y);
 	}
 	Vector2 Normalize()
 	{
-		return Vector2(x / this->Distance(), y / this->Distance());
+		return Vector2(x / this->Length(), y / this->Length());
 	}
 	float Cos(Vector2 &v)
 	{
-		return (Dot(v) / (Distance()*v.Distance()));
+		return (Dot(v) / (Length()*v.Length()));
 	}
 	float AngleRad(Vector2 &v)
 	{
-		return acosf(this->Dot(v) / (this->Distance()*v.Distance()));
+		return acosf(this->Dot(v) / (this->Length()*v.Length()));
 	}
 	float AngleDeg(Vector2 &v) 
 	{
@@ -97,7 +98,115 @@ struct Vector2
 	}
 	Vector2 Proj(Vector2 &v)
 	{
-		return (Distance() * Cos(v) * v.Normalize());
+		return (Length() * Cos(v) * v.Normalize());
+	}
+	static Vector2& MinX(Vector2 &v1, Vector2 &v2)
+	{
+		if (v1.x > v2.x)
+			return v2;
+		return v1;
+	}
+	static Vector2& MinX(Vector2 *v, int length)
+	{
+		if (!v)
+			throw "Trying to access null array";
+		Vector2 &min = v[0];
+		for (int i = 1; i < length; i++)
+		{
+			if (min.x > v[i].x)
+			{
+				min = v[i];
+			}
+		}
+		return min;
+	}
+	static int MinXIndex(Vector2 *v, int length)
+	{
+		if (!v)
+			throw "Trying to access null array";
+		Vector2 &min = v[0];
+		int index = 0;
+		for (int i = 1; i < length; i++)
+		{
+			if (min.x > v[i].x)
+			{
+				min = v[i];
+				index = i;
+			}
+		}
+		return index;
+	}
+	static int MinXIndex(std::vector<Vector2> list)
+	{
+		Vector2 &min = list[0];
+		int index = 0;
+		for (int i = 1; i < list.size(); i++)
+		{
+			if (min.x > list[i].x)
+			{
+				min = list[i];
+				index = i;
+			}
+		}
+		return index;
+	}
+	static Vector2& MinY(Vector2 &v1, Vector2 &v2)
+	{
+		if (v1.y > v2.y)
+			return v2;
+		return v1;
+	}
+	static Vector2& MinY(Vector2 *v, int length)
+	{
+		if (!v)
+			throw "Trying to access null array";
+		Vector2 &min = v[0];
+		for (int i = 1; i < length; i++)
+		{
+			if (min.y > v[i].y)
+			{
+				min = v[i];
+			}
+		}
+		return min;
+	}
+	static int MinYIndex(Vector2 *v, int length)
+	{
+		if (!v)
+			throw "Trying to access null array";
+		Vector2 &min = v[0];
+		int index = 0;
+		for (int i = 1; i < length; i++)
+		{
+			if (min.y > v[i].y)
+			{
+				min = v[i];
+				index = i;
+			}
+		}
+		return index;
+	}
+	static int MinYIndex(std::vector<Vector2> list)
+	{
+		Vector2 &min = list[0];
+		int index = 0;
+		for (int i = 1; i < list.size(); i++)
+		{
+			if (min.y > list[i].y)
+			{
+				min = list[i];
+				index = i;
+			}
+		}
+		return index;
+	}
+	static Vector2 Lerp(Vector2 &v1, Vector2 &v2, float ratio)
+	{
+		return Vector2(BaseMath::Lerp(v1.x, v2.x, ratio), BaseMath::Lerp(v1.y, v2.y, ratio));
+	}
+	static float Distance(Vector2 &v1, Vector2 &v2)
+	{
+		return sqrtf(powf(v2.x - v1.x, 2.0f) + powf(v2.y - v1.y, 2.0f));
 	}
 };
 
@@ -178,22 +287,22 @@ struct Vector3
 	{
 		return Vector3(y*v.z - z * v.y, z*v.x - x * v.z, x*v.y - y * v.x);
 	}
-	float Distance()
+	float Length()
 	{
 		return sqrtf(x * x + y * y + z * z);
 	}
 	Vector3 Normalize()
 	{
-		float d = Distance();
+		float d = Length();
 		return Vector3(x / d, y / d, z / d);
 	}
 	float Cos(Vector3 &v)
 	{
-		return (Dot(v) / (Distance() * v.Distance()));
+		return (Dot(v) / (Length() * v.Length()));
 	}
 	float AngleRad(Vector3 &v)
 	{
-		return acosf(this->Dot(v) / this->Distance()*v.Distance());
+		return acosf(this->Dot(v) / this->Length()*v.Length());
 	}
 	float AngleDeg(Vector3 &v)
 	{
@@ -201,7 +310,65 @@ struct Vector3
 	}
 	Vector3 Proj(Vector3 &v)
 	{
-		return (Distance() * Cos(v) * v.Normalize());
+		return (Length() * Cos(v) * v.Normalize());
+	}
+	static Vector3& MinX(Vector3 &v1, Vector3 &v2)
+	{
+		if (v1.x > v2.x)
+			return v2;
+		return v1;
+	}
+	static Vector3& MinX(Vector3 *v, int length)
+	{
+		if (!v)
+			throw "Trying to access null array";
+		Vector3 &min = v[0];
+		for (int i = 1; i < length; i++)
+		{
+			if (min.x > v[i].x)
+			{
+				min = v[i];
+			}
+		}
+		return min;
+	}
+	static int MinXIndex(Vector3 *v, int length)
+	{
+		if (!v)
+			throw "Trying to access null array";
+		Vector3 &min = v[0];
+		int index = 0;
+		for (int i = 1; i < length; i++)
+		{
+			if (min.x > v[i].x)
+			{
+				min = v[i];
+				index = i;
+			}
+		}
+		return index;
+	}
+	static int MinXIndex(std::vector<Vector3> list)
+	{
+		Vector3 &min = list[0];
+		int index = 0;
+		for (int i = 1; i < list.size(); i++)
+		{
+			if (min.x > list[i].x)
+			{
+				min = list[i];
+				index = i;
+			}
+		}
+		return index;
+	}
+	static Vector3 Lerp(Vector3 &v1, Vector3 &v2, float ratio)
+	{
+		return Vector3(BaseMath::Lerp(v1.x, v2.x, ratio), BaseMath::Lerp(v1.y, v2.y, ratio), BaseMath::Lerp(v1.z, v2.z, ratio));
+	}
+	static float Distance(Vector3 &v1, Vector3 &v2)
+	{
+		return sqrtf(powf(v2.x - v1.x, 2.0f) + powf(v2.y - v1.y, 2.0f) + powf(v2.z - v1.z, 2.0f));
 	}
 };
 
@@ -277,22 +444,22 @@ struct Vector4
 	{
 		return Vector4(y*v.z - z * v.y, z*v.x - x * v.z, x*v.y - y * v.x);
 	}
-	float Distance3()
+	float Length3()
 	{
 		return sqrtf(x * x + y * y + z * z);
 	}
 	Vector4 Normalize3()
 	{
-		float d = Distance3();
+		float d = Length3();
 		return Vector4(x / d, y / d, z / d);
 	}
 	float Cos3(Vector4 &v)
 	{
-		return (Dot3(v) / (Distance3() * v.Distance3()));
+		return (Dot3(v) / (Length3() * v.Length3()));
 	}
 	float AngleRad3(Vector4 &v)
 	{
-		return acosf(this->Dot3(v) / this->Distance3()*v.Distance3());
+		return acosf(this->Dot3(v) / this->Length3()*v.Length3());
 	}
 	float AngleDeg3(Vector4 &v)
 	{
@@ -300,6 +467,6 @@ struct Vector4
 	}
 	Vector4 Proj3(Vector4 &v)
 	{
-		return (Distance3() * Cos3(v) * v.Normalize3());
+		return (Length3() * Cos3(v) * v.Normalize3());
 	}
 };

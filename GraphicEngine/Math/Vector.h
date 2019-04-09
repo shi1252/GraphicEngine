@@ -1,6 +1,5 @@
 #pragma once
 #include <math.h>
-#include <stdio.h>
 #include <vector>
 #include "BaseMath.h"
 
@@ -12,12 +11,12 @@ struct Vector2
 	Vector2(float x = 0, float y = 0) : x(x), y(y)
 	{
 	}
-	const static Vector2 zero;
-	const static Vector2 one;
-	const static Vector2 right;
-	const static Vector2 left;
-	const static Vector2 up;
-	const static Vector2 down;
+	static const Vector2 zero;
+	static const Vector2 one;
+	static const Vector2 right;
+	static const Vector2 left;
+	static const Vector2 up;
+	static const Vector2 down;
 
 	Vector2& operator+=(const Vector2 &v)
 	{
@@ -92,7 +91,7 @@ struct Vector2
 	{
 		return acosf(this->Dot(v) / (this->Length()*v.Length()));
 	}
-	float AngleDeg(Vector2 &v) 
+	float AngleDeg(Vector2 &v)
 	{
 		return AngleRad(v) * 180.0f / PI;
 	}
@@ -219,15 +218,19 @@ struct Vector3
 	Vector3(float x = 0, float y = 0, float z = 0) : x(x), y(y), z(z)
 	{
 	}
-	const static Vector3 zero;
-	const static Vector3 one;
-	const static Vector3 right;
-	const static Vector3 left;
-	const static Vector3 up;
-	const static Vector3 down;
-	const static Vector3 forward;
-	const static Vector3 backward;
+	static const Vector3 zero;
+	static const Vector3 one;
+	static const Vector3 right;
+	static const Vector3 left;
+	static const Vector3 up;
+	static const Vector3 down;
+	static const Vector3 forward;
+	static const Vector3 backward;
 
+	operator Vector2()
+	{
+		return Vector2(x, y);
+	}
 	Vector3& operator+=(const Vector3 &v)
 	{
 		this->x += v.x;
@@ -379,10 +382,18 @@ struct Vector4
 	float z;
 	float w;
 
-	Vector4(float x = 0, float y = 0, float z = 0, float w = 1) : x(x), y(y), z(z), w(w)
+	Vector4(float x = 0, float y = 0, float z = 0, float w = 0) : x(x), y(y), z(z), w(w)
 	{
 	}
 
+	operator Vector2()
+	{
+		return Vector2(x, y);
+	}
+	operator Vector3()
+	{
+		return Vector3(x, y, z);
+	}
 	Vector4& operator+=(const Vector4 &v)
 	{
 		this->x += v.x;

@@ -1,5 +1,10 @@
 #pragma once
 #define PI 3.141592f
+#define DegToRad 0.01745329252f
+#define RadToDeg 57.295779513f
+typedef unsigned char BYTE;
+typedef unsigned short WORD;
+typedef unsigned long DWORD;
 
 static class BaseMath
 {
@@ -23,6 +28,6 @@ public:
 		BYTE r1 = (BYTE)255 & color1, r2 = (BYTE)255 & color2;
 		WORD g1 = ((WORD)65280 & color1) >> 8, g2 = ((WORD)65280 & color2) >> 8;
 		DWORD b1 = ((DWORD)16711680 & color1) >> 16, b2 = ((DWORD)16711680 & color2) >> 16;
-		return RGB(Lerp(r1, r2, ratio), Lerp(g1, g2, ratio), Lerp(b1, b2, ratio));
+		return (Lerp(r1, r2, ratio) | Lerp(g1, g2, ratio) << 8 | Lerp(b1, b2, ratio) << 16);
 	}
 };

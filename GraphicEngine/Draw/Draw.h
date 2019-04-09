@@ -4,12 +4,12 @@
 #include "..\RenderSetting.h"
 struct Vector2;
 
-void DrawDot(HDC hdc, Vector2 pos, COLORREF color)
+static void DrawDot(HDC hdc, Vector2 pos, COLORREF color)
 {
 	SetPixel(hdc, pos.x, pos.y, color);
 }
 
-void DrawLine(HDC hdc, Vector2 start, Vector2 end, COLORREF color)
+static void DrawLine(HDC hdc, Vector2 start, Vector2 end, COLORREF color)
 {
 	bool isXLong = true;
 	float dx = end.x - start.x;
@@ -46,7 +46,7 @@ void DrawLine(HDC hdc, Vector2 start, Vector2 end, COLORREF color)
 	}
 }
 
-void DrawTriangle(HDC hdc, Vector2 v1, Vector2 v2, Vector2 v3, COLORREF color)
+static void DrawTriangle(HDC hdc, Vector2 v1, Vector2 v2, Vector2 v3, COLORREF color)
 {
 	std::vector<Vector2> list;
 	list.push_back(v1);
@@ -103,7 +103,7 @@ void DrawTriangle(HDC hdc, Vector2 v1, Vector2 v2, Vector2 v3, COLORREF color)
 	}
 }
 
-void DrawTriangleV2(HDC hdc, Vector2 v1, Vector2 v2, Vector2 v3, COLORREF color)
+static void DrawTriangleV2(HDC hdc, Vector2 v1, Vector2 v2, Vector2 v3, COLORREF color)
 {
 	std::vector<Vector2> list;
 	list.push_back(v1);
@@ -147,35 +147,46 @@ void DrawTriangleV2(HDC hdc, Vector2 v1, Vector2 v2, Vector2 v3, COLORREF color)
 
 	for (int x = minX.x; x <= maxX.x; x++)
 	{
-		for (int y = minY.y; y <= maxY.y; y++)
-		{
-			float f1 = 0;
-			if (x < midX.x)
-				f1 = m1 * x + y1;
-			else
-				f1 = m2 * x + y2;
-			float f2 = m3 * x + y3;
+		float f1 = 0;
+		if (x < midX.x)
+			f1 = m1 * x + y1;
+		else
+			f1 = m2 * x + y2;
+		float f2 = m3 * x + y3;
 
-			if (midX.y >= maxX.y)
-			{
-				if (y >= f2 && y <= f1)
-					SetPixel(hdc, x, y, color);
-			}
-			else
-			{
-				if (y <= f2 && y >= f1)
-					SetPixel(hdc, x, y, color);
-			}
+		int startY = f1, endY = f2;
+		int increase = 1;
+		if (f1 > f2)
+			increase = -1;
+
+		while (startY != endY)
+		{
+			SetPixel(hdc, x, startY, color);
+			startY += increase;
 		}
+
+		//for (int y = minY.y; y <= maxY.y; y++)
+		//{
+		//	if (midX.y >= maxX.y)
+		//	{
+		//		if (y >= f2 && y <= f1)
+		//			SetPixel(hdc, x, y, color);
+		//	}
+		//	else
+		//	{
+		//		if (y <= f2 && y >= f1)
+		//			SetPixel(hdc, x, y, color);
+		//	}
+		//}
 	}
 }
 
-void DrawTriangleByCross(HDC hdc, Vector2 v1, Vector2 v2, Vector2 v3, COLORREF color)
+static void DrawTriangleByCross(HDC hdc, Vector2 v1, Vector2 v2, Vector2 v3, COLORREF color)
 {
 
 }
 
-void DrawTriangleByCom(HDC hdc, Vector2 v1, Vector2 v2, Vector2 v3, COLORREF color)
+static void DrawTriangleByCom(HDC hdc, Vector2 v1, Vector2 v2, Vector2 v3, COLORREF color)
 {
 
 }

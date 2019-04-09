@@ -1,6 +1,7 @@
 #pragma once
 #include "BaseGeometry.h"
 #include "..\Draw\Draw.h"
+
 class PlaneGeometry : public BaseGeometry
 {
 public:
@@ -21,9 +22,4 @@ public:
 		};
 		indexCount = 6;
 	}
-
-	//void Draw(HDC hdc)
-	//{
-	//	DrawTriangle()
-	//}
 };

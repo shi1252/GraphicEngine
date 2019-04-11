@@ -2,7 +2,7 @@
 #include "RenderSetting.h"
 #include "GraphicEngine.h"
 #include "Draw\Draw.h"
-#include "Math\PlaneGeometry.h"
+#include ".\Geometry\PlaneGeometry.h"
 
 static Matrix4x4 worldMatrix(1, 0, 0, WIN_WIDTH * 0.5f, 0, 1, 0, WIN_HEIGHT * 0.5f, 0, 0, 1, 0, 0, 0, 0, 1);
 
@@ -53,6 +53,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	HDC hdc;
 	PlaneGeometry p(100, 100), *p2;
+	Vertex v1(300, 400, 0, RGB(255, 0, 0)), v2(500, 400, 0, RGB(0,255,0)), v3(200,300,0,RGB(0,0,255));
 	switch (message)
 	{
 	case WM_KEYDOWN:
@@ -70,6 +71,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		DrawLine(hdc, Vector2(100, 200), Vector2(200, 100), RGB(255, 0, 0));
 		p2 = (PlaneGeometry*)&(worldMatrix * Matrix4x4::TRSMatrix(Vector3::zero * 150.0f, Vector3(0, 0, 0), Vector3::one * 0.5f) * p);
 		p2->Draw(hdc);
+		DrawTriangleV2(hdc, v1, v2, v3);
 		ReleaseDC(hWnd, hdc);
 		return 0;
 	case WM_DESTROY:

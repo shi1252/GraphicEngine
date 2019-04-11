@@ -1,6 +1,6 @@
 #pragma once
 #include "Vector.h"
-#include "BaseGeometry.h"
+#include "..\Geometry\BaseGeometry.h"
 #include "Matrix3x3.h"
 #include <math.h>
 

@@ -7,6 +7,6 @@ void BaseGeometry::Draw(HDC hdc)
 
 	for (int i = 0; i < indexCount; i += 3)
 	{
-		DrawTriangleV2(hdc, vertices[indices[i]].position, vertices[indices[i+1]].position, vertices[indices[i + 2]].position, RGB(255, 0, 0));
+		DrawTriangleV2(hdc, vertices[indices[i]], vertices[indices[i+1]], vertices[indices[i + 2]]);
 	}
 }

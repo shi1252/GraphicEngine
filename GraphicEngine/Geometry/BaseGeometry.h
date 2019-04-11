@@ -1,7 +1,7 @@
 #pragma once
-#include "Vertex.h"
+#include "..\Math\Vertex.h"
 #include "..\Draw\Draw.h"
-#include "Transform.h"
+#include "..\Math\Transform.h"
 
 class BaseGeometry
 {

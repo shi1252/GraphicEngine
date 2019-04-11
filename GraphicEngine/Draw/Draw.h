@@ -3,6 +3,7 @@
 #include <vector>
 #include "..\RenderSetting.h"
 struct Vector2;
+struct Vertex;
 
 static void DrawDot(HDC hdc, Vector2 pos, COLORREF color)
 {
@@ -162,6 +163,84 @@ static void DrawTriangleV2(HDC hdc, Vector2 v1, Vector2 v2, Vector2 v3, COLORREF
 		while (startY != endY)
 		{
 			SetPixel(hdc, x, startY, color);
+			startY += increase;
+		}
+
+		//for (int y = minY.y; y <= maxY.y; y++)
+		//{
+		//	if (midX.y >= maxX.y)
+		//	{
+		//		if (y >= f2 && y <= f1)
+		//			SetPixel(hdc, x, y, color);
+		//	}
+		//	else
+		//	{
+		//		if (y <= f2 && y >= f1)
+		//			SetPixel(hdc, x, y, color);
+		//	}
+		//}
+	}
+}
+
+static void DrawTriangleV2(HDC hdc, Vertex v1, Vertex v2, Vertex v3)
+{
+	std::vector<Vector2> list;
+	list.push_back(v1.position);
+	list.push_back(v2.position);
+	list.push_back(v3.position);
+
+	int index = Vector2::MinXIndex(list);
+	Vector2 minX = list[index];
+	list.erase(list.begin() + index);
+	index = Vector2::MinXIndex(list);
+	Vector2 midX = list[index];
+	list.erase(list.begin() + index);
+	Vector2 maxX = list[0];
+	list.clear();
+
+	list.push_back(v1.position);
+	list.push_back(v2.position);
+	list.push_back(v3.position);
+	index = Vector2::MinYIndex(list);
+	Vector2 minY = list[index];
+	list.erase(list.begin() + index);
+	index = Vector2::MinYIndex(list);
+	Vector2 midY = list[index];
+	list.erase(list.begin() + index);
+	Vector2 maxY = list[0];
+	list.clear();
+
+	float m1 = (midX.y - minX.y) / (midX.x - minX.x);
+	if ((midX.x - minX.x) == 0)
+		m1 = 0;
+	float m2 = (maxX.y - midX.y) / (maxX.x - midX.x);
+	if ((maxX.x - midX.x) == 0)
+		m2 = 0;
+	float m3 = (maxX.y - minX.y) / (maxX.x - minX.x);
+	if ((maxX.x - minX.x) == 0)
+		m3 = 0;
+
+	float y1 = midX.y - m1 * midX.x;
+	float y2 = midX.y - m2 * midX.x;
+	float y3 = minX.y - m3 * minX.x;
+
+	for (int x = minX.x; x <= maxX.x; x++)
+	{
+		float f1 = 0;
+		if (x < midX.x)
+			f1 = m1 * x + y1;
+		else
+			f1 = m2 * x + y2;
+		float f2 = m3 * x + y3;
+
+		int startY = f1, endY = f2;
+		int increase = 1;
+		if (f1 > f2)
+			increase = -1;
+
+		while (startY != endY)
+		{
+			SetPixel(hdc, x, startY, BaseMath::InterpColor(v1, v2, v3, Vector3(x, startY)));
 			startY += increase;
 		}
 

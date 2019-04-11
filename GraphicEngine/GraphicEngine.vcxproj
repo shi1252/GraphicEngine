@@ -139,20 +139,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="GraphicEngine.cpp" />
-    <ClCompile Include="Math\BaseGeometry.cpp" />
+    <ClCompile Include="Geometry\BaseGeometry.cpp" />
+    <ClCompile Include="Math\BaseMath.cpp" />
     <ClCompile Include="Math\Matrix.cpp" />
     <ClCompile Include="Math\Transform.cpp" />
     <ClCompile Include="Math\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera\Camera.h" />
+    <ClInclude Include="Draw\Draw.h" />
     <ClInclude Include="GraphicEngine.h" />
-    <ClInclude Include="Math\BaseGeometry.h" />
+    <ClInclude Include="Geometry\BaseGeometry.h" />
     <ClInclude Include="Math\BaseMath.h" />
     <ClInclude Include="Math\Matrix2x2.h" />
     <ClInclude Include="Math\Matrix3x3.h" />
     <ClInclude Include="Math\Matrix4x4.h" />
-    <ClInclude Include="Math\PlaneGeometry.h" />
+    <ClInclude Include="Geometry\PlaneGeometry.h" />
     <ClInclude Include="Math\Transform.h" />
     <ClInclude Include="Math\Vector.h" />
     <ClInclude Include="Math\Vertex.h" />

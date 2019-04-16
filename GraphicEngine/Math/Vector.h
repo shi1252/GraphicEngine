@@ -373,6 +373,25 @@ struct Vector3
 	{
 		return sqrtf(powf(v2.x - v1.x, 2.0f) + powf(v2.y - v1.y, 2.0f) + powf(v2.z - v1.z, 2.0f));
 	}
+	static Vector3 Clamp(Vector3 value, Vector3 min, Vector3 max)
+	{
+		float x = value.x, y = value.y, z = value.z;
+		x = BaseMath::Clamp(x, min.x, max.x);
+		y = BaseMath::Clamp(y, min.y, max.y);
+		z = BaseMath::Clamp(z, min.z, max.z);
+		return Vector3(x, y, z);
+	}
+	static Vector3 RotateClamp(Vector3 value)
+	{
+		float x = value.x, y = value.y, z = value.z;
+		if (x < 0) x = 360.0f - fmod(x, 360.0f);
+		else if (x > 360) x = fmod(x, 360.0f);
+		if (y < 0) y = 360.0f - fmod(y, 360.0f);
+		else if (y > 360) y = fmod(y, 360.0f);
+		if (z < 0) z = 360.0f - fmod(z, 360.0f);
+		else if (z > 360) z = fmod(z, 360.0f);
+		return Vector3(x, y, z);
+	}
 };
 
 struct Vector4

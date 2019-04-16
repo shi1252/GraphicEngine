@@ -1,12 +1,17 @@
 #include <Windows.h>
+#include <vector>
 #include "RenderSetting.h"
 #include "GraphicEngine.h"
 #include "Draw\Draw.h"
 #include ".\Geometry\PlaneGeometry.h"
+#include ".\Buffer\BitmapBuffer.h"
 
 static Matrix4x4 worldMatrix(1, 0, 0, WIN_WIDTH * 0.5f, 0, 1, 0, WIN_HEIGHT * 0.5f, 0, 0, 1, 0, 0, 0, 0, 1);
+static std::vector<BaseGeometry*> renderList;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+void Render(BitmapBuffer *bb);
+void Update();
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -27,8 +32,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	MoveWindow(hWnd, window.left, window.top, WIN_WIDTH + x, WIN_HEIGHT + y, true);
 	GetClientRect(hWnd, &client);
 
+	BitmapBuffer buffer(hWnd, WIN_WIDTH, WIN_HEIGHT, 0xff888888);
+
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
+
+	PlaneGeometry p(100, 100);
+	renderList.push_back(&p);
 
 	MSG msg;
 	ZeroMemory(&msg, sizeof(msg));
@@ -39,10 +49,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		else
-		{
-
-		}
+		Update();
+		Render(&buffer);
 	}
 
 	UnregisterClass(szWndAppName, wc.hInstance);
@@ -51,9 +59,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	HDC hdc;
-	PlaneGeometry p(100, 100), *p2;
-	Vertex v1(300, 400, 0, RGB(255, 0, 0)), v2(500, 400, 0, RGB(0,255,0)), v3(200,300,0,RGB(0,0,255));
 	switch (message)
 	{
 	case WM_KEYDOWN:
@@ -61,18 +66,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_KEYUP:
 		return 0;
 	case WM_PAINT:
-		hdc = GetDC(hWnd);
-		SetPixel(hdc, WIN_WIDTH / 2, WIN_HEIGHT / 2, RGB(0, 0, 0));
-		DrawLine(hdc, Vector2(0, 0), Vector2(WIN_WIDTH, WIN_HEIGHT), RGB(255, 0, 0));
-		SetPixel(hdc, WIN_WIDTH - 10, WIN_HEIGHT - 10, RGB(0, 0, 0));
-		//DrawTriangleV2(hdc, Vector2(300, 400), Vector2(500, 400), Vector2(200, 300), RGB(0, 255, 0));
-		//DrawTriangleV2(hdc, Vector2(200, 300), Vector2(300, 600), Vector2(175, 500), RGB(0, 255, 0));
-		//DrawTriangleV2(hdc, Vector2(300, 600), Vector2(300, 400), Vector2(500, 575), RGB(0, 255, 0));
-		DrawLine(hdc, Vector2(100, 200), Vector2(200, 100), RGB(255, 0, 0));
-		p2 = (PlaneGeometry*)&(worldMatrix * Matrix4x4::TRSMatrix(Vector3::zero * 150.0f, Vector3(0, 0, 0), Vector3::one * 0.5f) * p);
-		p2->Draw(hdc);
-		DrawTriangleV2(hdc, v1, v2, v3);
-		ReleaseDC(hWnd, hdc);
 		return 0;
 	case WM_DESTROY:
 		PostQuitMessage(0);
@@ -80,4 +73,27 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 
 	return DefWindowProc(hWnd, message, wParam, lParam);
+}
+
+void Update()
+{
+	//p.transform->position += Vector3(1, 0, 0);
+	renderList[0]->transform->Rotate(Vector3(0, 2.5f, 0));
+}
+
+void Render(BitmapBuffer *bb)
+{
+	bb->Clear();
+
+	// Call DrawFunction
+	//Vertex v1(300, 400, 0, RGB(255, 0, 0)), v2(500, 400, 0, RGB(0, 255, 0)), v3(200, 300, 0, RGB(0, 0, 255));
+
+	//DrawTriangleV2(bb, v1, v2, v3);
+
+	for (int i = 0; i < renderList.size(); i++)
+	{
+		renderList[i]->Draw(bb, worldMatrix);
+	}
+
+	bb->Draw();
 }

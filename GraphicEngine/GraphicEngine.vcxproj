@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Buffer\BitmapBuffer.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="GraphicEngine.cpp" />
     <ClCompile Include="Geometry\BaseGeometry.cpp" />
@@ -148,6 +149,7 @@
     <ClCompile Include="Math\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Buffer\BitmapBuffer.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Draw\Draw.h" />
     <ClInclude Include="GraphicEngine.h" />

@@ -2,15 +2,16 @@
 #include <Windows.h>
 #include <vector>
 #include "..\RenderSetting.h"
+#include "..\Buffer\BitmapBuffer.h"
+#include "..\Math\Vertex.h"
 struct Vector2;
-struct Vertex;
 
-static void DrawDot(HDC hdc, Vector2 pos, COLORREF color)
+static void DrawDot(BitmapBuffer *bb, Vector2 pos, COLORREF color)
 {
-	SetPixel(hdc, pos.x, pos.y, color);
+	bb->SetColor(pos.x, pos.y, color);
 }
 
-static void DrawLine(HDC hdc, Vector2 start, Vector2 end, COLORREF color)
+static void DrawLine(BitmapBuffer *bb, Vector2 start, Vector2 end, COLORREF color)
 {
 	bool isXLong = true;
 	float dx = end.x - start.x;
@@ -29,7 +30,7 @@ static void DrawLine(HDC hdc, Vector2 start, Vector2 end, COLORREF color)
 
 		for (int x = 0; x <= absDx; x++)
 		{
-			SetPixel(hdc, start.x + x * xRatio, y, color);
+			bb->SetColor(start.x + x * xRatio, y, color);
 			y += m * xRatio;
 		}
 	}
@@ -41,13 +42,13 @@ static void DrawLine(HDC hdc, Vector2 start, Vector2 end, COLORREF color)
 
 		for (int y = 0; y <= absDy; y++)
 		{
-			SetPixel(hdc, x, start.y + y * yRatio, color);
+			bb->SetColor(x, start.y + y * yRatio, color);
 			x += m * yRatio;
 		}
 	}
 }
 
-static void DrawTriangle(HDC hdc, Vector2 v1, Vector2 v2, Vector2 v3, COLORREF color)
+static void DrawTriangle(BitmapBuffer *bb, Vector2 v1, Vector2 v2, Vector2 v3, COLORREF color)
 {
 	std::vector<Vector2> list;
 	list.push_back(v1);
@@ -90,7 +91,7 @@ static void DrawTriangle(HDC hdc, Vector2 v1, Vector2 v2, Vector2 v3, COLORREF c
 		{
 			Vector2 start = Vector2(minX.x + dx, minX.y + m2 * dx);
 			Vector2 end = Vector2(midX.x + dx * xRatio, midX.y + m1 * dx * xRatio);
-			DrawLine(hdc, start, end, color);
+			DrawLine(bb, start, end, color);
 		}
 	}
 	else
@@ -99,12 +100,12 @@ static void DrawTriangle(HDC hdc, Vector2 v1, Vector2 v2, Vector2 v3, COLORREF c
 		{
 			Vector2 start = Vector2(midX.x + dx, midX.y + m1 * dx);
 			Vector2 end = Vector2(minX.x + dx * xRatio, minX.y + m2 * dx * xRatio);
-			DrawLine(hdc, start, end, color);
+			DrawLine(bb, start, end, color);
 		}
 	}
 }
 
-static void DrawTriangleV2(HDC hdc, Vector2 v1, Vector2 v2, Vector2 v3, COLORREF color)
+static void DrawTriangleV2(BitmapBuffer *bb, Vector2 v1, Vector2 v2, Vector2 v3, COLORREF color)
 {
 	std::vector<Vector2> list;
 	list.push_back(v1);
@@ -162,7 +163,7 @@ static void DrawTriangleV2(HDC hdc, Vector2 v1, Vector2 v2, Vector2 v3, COLORREF
 
 		while (startY != endY)
 		{
-			SetPixel(hdc, x, startY, color);
+			bb->SetColor(x, startY, color);
 			startY += increase;
 		}
 
@@ -182,7 +183,7 @@ static void DrawTriangleV2(HDC hdc, Vector2 v1, Vector2 v2, Vector2 v3, COLORREF
 	}
 }
 
-static void DrawTriangleV2(HDC hdc, Vertex v1, Vertex v2, Vertex v3)
+static void DrawTriangleV2(BitmapBuffer *bb, Vertex v1, Vertex v2, Vertex v3)
 {
 	std::vector<Vector2> list;
 	list.push_back(v1.position);
@@ -233,14 +234,14 @@ static void DrawTriangleV2(HDC hdc, Vertex v1, Vertex v2, Vertex v3)
 			f1 = m2 * x + y2;
 		float f2 = m3 * x + y3;
 
-		int startY = f1, endY = f2;
+		int startY = BaseMath::Clamp(f1, minY.y, maxY.y), endY = BaseMath::Clamp(f2, minY.y, maxY.y);
 		int increase = 1;
 		if (f1 > f2)
 			increase = -1;
 
 		while (startY != endY)
 		{
-			SetPixel(hdc, x, startY, BaseMath::InterpColor(v1, v2, v3, Vector3(x, startY)));
+			bb->SetColor(x, startY, BaseMath::InterpColor(v1, v2, v3, Vector3(x, startY)));
 			startY += increase;
 		}
 

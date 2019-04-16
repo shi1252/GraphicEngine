@@ -83,32 +83,36 @@ struct Matrix4x4
 	//		m33
 	//	);
 	//}
-	Vector3& operator*(Vector3 &v)
+	Vector3 operator*(Vector3 &v)
 	{
 		Vector3 temp = v;
 		temp.x = v.x * m00 + v.y * m01 + v.z * m02 + 1 * m03;
 		temp.y = v.x * m10 + v.y * m11 + v.z * m12 + 1 * m13;
 		temp.z = v.x * m20 + v.y * m21 + v.z * m22 + 1 * m23;
+		return temp;
 		v = temp;
 		return v;
 	}
-	Vector4& operator*(Vector4 &v)
+	Vector4 operator*(Vector4 &v)
 	{
 		Vector4 temp = v;
 		temp.x = v.x * m00 + v.y * m01 + v.z * m02 + v.w * m03;
 		temp.y = v.x * m10 + v.y * m11 + v.z * m12 + v.w * m13;
 		temp.z = v.x * m20 + v.y * m21 + v.z * m22 + v.w * m23;
 		temp.w = v.x * m30 + v.y * m31 + v.z * m32 + v.w * m33;
+		return temp;
 		v = temp;
 		return v;
 	}
-	BaseGeometry& operator*(BaseGeometry &bg)
+	Vertex operator*(Vertex &v)
 	{
-		for (int i = 0; i < bg.vertexCount; i++)
-		{
-			(*this) * bg.vertices[i].position;
-		}
-		return bg;
+		Vector3 temp = v.position;
+		temp.x = v.position.x * m00 + v.position.y * m01 + v.position.z * m02 + 1 * m03;
+		temp.y = v.position.x * m10 + v.position.y * m11 + v.position.z * m12 + 1 * m13;
+		temp.z = v.position.x * m20 + v.position.y * m21 + v.position.z * m22 + 1 * m23;
+		return Vertex(temp, v.color);
+		v.position = temp;
+		return v;
 	}
 	static Matrix4x4 TranslateMatrix(float x, float y, float z)
 	{

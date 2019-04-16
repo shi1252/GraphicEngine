@@ -21,6 +21,13 @@ public:
 			ratio = 0.f;
 		return (val1 + (val2 - val1) * ratio);
 	}
+	template <typename T>
+	static T Clamp(T value, T min, T max)
+	{
+		if (value > max) value = max;
+		if (value < min) value = min;
+		return value;
+	}
 	//static DWORD InterpColor(DWORD &color1, DWORD &color2, float ratio)
 	//{
 	//	if (ratio > 1.f)

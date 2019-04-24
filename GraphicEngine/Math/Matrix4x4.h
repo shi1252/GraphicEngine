@@ -8,13 +8,18 @@ struct Matrix4x4
 {
 	float m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33;
 
+	Matrix4x4()
+		:m00(1.f), m01(0.f), m02(0.f), m03(0.f),
+		m10(0.f), m11(1.f), m12(0.f), m13(0.f),
+		m20(0.f), m21(0.f), m22(1.f), m23(0.f),
+		m30(0.f), m31(0.f), m32(0.f), m33(1.f)
+	{}
 	Matrix4x4(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20, float m21, float m22, float m23, float m30, float m31, float m32, float m33)
 		: m00(m00), m01(m01), m02(m02), m03(m03),
 		m10(m10), m11(m11), m12(m12), m13(m13),
 		m20(m20), m21(m21), m22(m22), m23(m23),
 		m30(m30), m31(m31), m32(m32), m33(m33)
-	{
-	}
+	{}
 	Matrix4x4(Vector4 col1, Vector4 col2, Vector4 col3, Vector4 col4)
 	{
 		m00 = col1.x; m10 = col1.y; m20 = col1.z; m30 = col1.w;
@@ -122,6 +127,14 @@ struct Matrix4x4
 	{
 		return Matrix4x4(Vector4(1, 0, 0, 0), Vector4(0, 1, 0, 0), Vector4(0, 0, 1, 0), Vector4(v.x, v.y, v.z, 1));
 	}
+	static Matrix4x4 InverseTranslateMatrix(float x, float y, float z)
+	{
+		return Matrix4x4(Vector4(1, 0, 0, 0), Vector4(0, 1, 0, 0), Vector4(0, 0, 1, 0), Vector4(x, y, z, 1));
+	}
+	static Matrix4x4 InverseTranslateMatrix(Vector3 v)
+	{
+		return Matrix4x4(Vector4(1, 0, 0, 0), Vector4(0, 1, 0, 0), Vector4(0, 0, 1, 0), Vector4(v.x, v.y, v.z, 1));
+	}
 	static Matrix4x4 XRotateMatrix(float degree)
 	{
 		return Matrix4x4(Vector4(1, 0, 0, 0), Vector4(0, cosf(degree * DegToRad), sinf(degree * DegToRad), 0), Vector4(0, -sinf(degree * DegToRad), cos(degree * DegToRad), 0), Vector4(0, 0, 0, 1));
@@ -152,6 +165,12 @@ struct Matrix4x4
 	}
 	static Matrix4x4 TRSMatrix(Vector3 position, Vector3 rotation, Vector3 scale)
 	{
+		return  TranslateMatrix(position) * YXZRotateMatrix(rotation) * ScaleMatrix(scale);
+	}
+	static Matrix4x4 InverseTRSMatrix(Vector3 position, Vector3 rotation, Vector3 scale)
+	{
+		// TODO
+		// Make inverse matrix
 		return  TranslateMatrix(position) * YXZRotateMatrix(rotation) * ScaleMatrix(scale);
 	}
 };

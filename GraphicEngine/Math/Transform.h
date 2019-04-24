@@ -4,6 +4,9 @@
 
 class Transform
 {
+private:
+	Matrix4x4 matrix;
+	Matrix4x4 invMatrix;
 public:
 	Vector3 position = Vector3::zero;
 	Vector3 rotation = Vector3::zero;
@@ -17,4 +20,7 @@ public:
 	void Translate(Vector3 dir, float distance);
 	void Rotate(Vector3 rot);
 	Matrix4x4 GetMatrix();
+	Matrix4x4 GetInverseMatrix();
+private:
+	void ValueChanged();
 };

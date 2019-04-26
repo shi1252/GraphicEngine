@@ -119,6 +119,14 @@ struct Matrix4x4
 		v.position = temp;
 		return v;
 	}
+	static Matrix4x4 TransposeMatrix(const Matrix4x4 &m)
+	{
+		return Matrix4x4(
+			m.m00, m.m10, m.m20, m.m30,
+			m.m01, m.m11, m.m21, m.m31,
+			m.m02, m.m12, m.m22, m.m32,
+			m.m03, m.m13, m.m23, m.m33);
+	}
 	static Matrix4x4 TranslateMatrix(float x, float y, float z)
 	{
 		return Matrix4x4(Vector4(1, 0, 0, 0), Vector4(0, 1, 0, 0), Vector4(0, 0, 1, 0), Vector4(x, y, z, 1));
@@ -129,11 +137,11 @@ struct Matrix4x4
 	}
 	static Matrix4x4 InverseTranslateMatrix(float x, float y, float z)
 	{
-		return Matrix4x4(Vector4(1, 0, 0, 0), Vector4(0, 1, 0, 0), Vector4(0, 0, 1, 0), Vector4(x, y, z, 1));
+		return Matrix4x4(Vector4(1, 0, 0, 0), Vector4(0, 1, 0, 0), Vector4(0, 0, 1, 0), Vector4(-x, -y, -z, 1));
 	}
 	static Matrix4x4 InverseTranslateMatrix(Vector3 v)
 	{
-		return Matrix4x4(Vector4(1, 0, 0, 0), Vector4(0, 1, 0, 0), Vector4(0, 0, 1, 0), Vector4(v.x, v.y, v.z, 1));
+		return Matrix4x4(Vector4(1, 0, 0, 0), Vector4(0, 1, 0, 0), Vector4(0, 0, 1, 0), Vector4(-v.x, -v.y, -v.z, 1));
 	}
 	static Matrix4x4 XRotateMatrix(float degree)
 	{
@@ -145,11 +153,27 @@ struct Matrix4x4
 	}
 	static Matrix4x4 ZRotateMatrix(float degree)
 	{
-		return Matrix4x4(Vector4(cosf(degree * DegToRad), sinf(degree * DegToRad), 0), Vector4(-sinf(degree * DegToRad), cos(degree * DegToRad), 0), Vector4(0, 0, 1, 0), Vector4(0, 0, 0, 1));
+		return Matrix4x4(Vector4(cosf(degree * DegToRad), sinf(degree * DegToRad), 0, 0), Vector4(-sinf(degree * DegToRad), cos(degree * DegToRad), 0, 0), Vector4(0, 0, 1, 0), Vector4(0, 0, 0, 1));
 	}
-	static Matrix4x4 YXZRotateMatrix(Vector3 rotation)
+	static Matrix4x4 InverseXRotateMatrix(float degree)
 	{
-		return  YRotateMatrix(rotation.y) * XRotateMatrix(rotation.x) * ZRotateMatrix(rotation.z);
+		return TransposeMatrix(Matrix4x4(Vector4(1, 0, 0, 0), Vector4(0, cosf(degree * DegToRad), sinf(degree * DegToRad), 0), Vector4(0, -sinf(degree * DegToRad), cos(degree * DegToRad), 0), Vector4(0, 0, 0, 1)));
+	}
+	static Matrix4x4 InverseYRotateMatrix(float degree)
+	{
+		return TransposeMatrix(Matrix4x4(Vector4(cosf(degree * DegToRad), 0, -sinf(degree * DegToRad), 0), Vector4(0, 1, 0, 0), Vector4(sinf(degree * DegToRad), 0, cos(degree * DegToRad), 0), Vector4(0, 0, 0, 1)));
+	}
+	static Matrix4x4 InverseZRotateMatrix(float degree)
+	{
+		return TransposeMatrix(Matrix4x4(Vector4(cosf(degree * DegToRad), sinf(degree * DegToRad), 0, 0), Vector4(-sinf(degree * DegToRad), cos(degree * DegToRad), 0, 0), Vector4(0, 0, 1, 0), Vector4(0, 0, 0, 1)));
+	}
+	static Matrix4x4 ZYXRotateMatrix(Vector3 rotation)
+	{
+		return  ZRotateMatrix(rotation.z) * YRotateMatrix(rotation.y) * XRotateMatrix(rotation.x);
+	}
+	static Matrix4x4 InverseZYXRotateMatrix(Vector3 rotation)
+	{
+		return  InverseXRotateMatrix(rotation.z) * InverseYRotateMatrix(rotation.y) * InverseZRotateMatrix(rotation.x);
 	}
 	static Matrix4x4 ScaleMatrix(float scale)
 	{
@@ -163,14 +187,24 @@ struct Matrix4x4
 	{
 		return Matrix4x4(Vector4(v.x, 0, 0, 0), Vector4(0, v.y, 0, 0), Vector4(0, 0, v.z, 0), Vector4(0, 0, 0, 1));
 	}
+	static Matrix4x4 InverseScaleMatrix(float scale)
+	{
+		return Matrix4x4(Vector4(1.f/scale, 0, 0, 0), Vector4(0, 1.f/scale, 0, 0), Vector4(0, 0, 1.f/scale, 0), Vector4(0, 0, 0, 1));
+	}
+	static Matrix4x4 InverseScaleMatrix(float x, float y, float z)
+	{
+		return Matrix4x4(Vector4(1.f/x, 0, 0, 0), Vector4(0, 1.f/y, 0, 0), Vector4(0, 0, 1.f/z, 0), Vector4(0, 0, 0, 1));
+	}
+	static Matrix4x4 InverseScaleMatrix(Vector3 v)
+	{
+		return Matrix4x4(Vector4(1.f/v.x, 0, 0, 0), Vector4(0, 1.f/v.y, 0, 0), Vector4(0, 0, 1.f/v.z, 0), Vector4(0, 0, 0, 1));
+	}
 	static Matrix4x4 TRSMatrix(Vector3 position, Vector3 rotation, Vector3 scale)
 	{
-		return  TranslateMatrix(position) * YXZRotateMatrix(rotation) * ScaleMatrix(scale);
+		return  TranslateMatrix(position) * ZYXRotateMatrix(rotation) * ScaleMatrix(scale);
 	}
 	static Matrix4x4 InverseTRSMatrix(Vector3 position, Vector3 rotation, Vector3 scale)
 	{
-		// TODO
-		// Make inverse matrix
-		return  TranslateMatrix(position) * YXZRotateMatrix(rotation) * ScaleMatrix(scale);
+		return  InverseScaleMatrix(scale) * InverseZYXRotateMatrix(rotation) * InverseTranslateMatrix(position);
 	}
 };

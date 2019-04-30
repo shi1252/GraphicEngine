@@ -152,6 +152,7 @@
     <ClInclude Include="Buffer\BitmapBuffer.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Draw\Draw.h" />
+    <ClInclude Include="Framework\HookVariable.h" />
     <ClInclude Include="GraphicEngine.h" />
     <ClInclude Include="Geometry\BaseGeometry.h" />
     <ClInclude Include="Math\BaseMath.h" />

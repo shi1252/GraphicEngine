@@ -215,9 +215,6 @@ struct Vector3
 	float y;
 	float z;
 
-	Vector3(float x = 0, float y = 0, float z = 0) : x(x), y(y), z(z)
-	{
-	}
 	static const Vector3 zero;
 	static const Vector3 one;
 	static const Vector3 right;
@@ -226,6 +223,10 @@ struct Vector3
 	static const Vector3 down;
 	static const Vector3 forward;
 	static const Vector3 backward;
+
+	Vector3(float x = 0, float y = 0, float z = 0) : x(x), y(y), z(z)
+	{
+	}
 
 	operator Vector2()
 	{
@@ -500,3 +501,22 @@ struct Vector4
 		return (Length3() * Cos3(v) * v.Normalize3());
 	}
 };
+
+#ifndef _VECTOR__
+#define _VECTOR__
+const Vector2 Vector2::zero(.0f, .0f);
+const Vector2 Vector2::one(1.0f, 1.0f);
+const Vector2 Vector2::right(1.0f, 0.0f);
+const Vector2 Vector2::left(-1.0f, 0.0f);
+const Vector2 Vector2::up(0.0f, 1.0f);
+const Vector2 Vector2::down(0.0f, -1.0f);
+
+const Vector3 Vector3::zero(.0f, .0f, .0f);
+const Vector3 Vector3::one(1.0f, 1.0f, 1.0f);
+const Vector3 Vector3::right(1.0f, 0.0f, 0.0f);
+const Vector3 Vector3::left(-1.0f, 0.0f, 0.0f);
+const Vector3 Vector3::up(0.0f, 1.0f, 0.0f);
+const Vector3 Vector3::down(0.0f, -1.0f, 0.0f);
+const Vector3 Vector3::forward(0.0f, 0.0f, 1.0f);
+const Vector3 Vector3::backward(0.0f, 0.0f, -1.0f);
+#endif

@@ -1,4 +1,5 @@
 #pragma once
+#include "..\Framework\HookVariable.h"
 #include "Vector.h"
 #include "Matrix4x4.h"
 
@@ -8,9 +9,9 @@ private:
 	Matrix4x4 matrix;
 	Matrix4x4 invMatrix;
 public:
-	Vector3 position = Vector3::zero;
-	Vector3 rotation = Vector3::zero;
-	Vector3 scale = Vector3::one;
+	HookVariable<Vector3> position;
+	HookVariable<Vector3> rotation;
+	HookVariable<Vector3> scale;
 
 	Transform();
 	Transform(const Transform &t);

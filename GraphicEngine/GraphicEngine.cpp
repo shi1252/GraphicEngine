@@ -1,10 +1,7 @@
-#include <Windows.h>
-#include <vector>
 #include "RenderSetting.h"
 #include "GraphicEngine.h"
-#include "Draw\Draw.h"
-#include ".\Geometry\PlaneGeometry.h"
-#include ".\Buffer\BitmapBuffer.h"
+
+Camera mainCam(WIN_WIDTH, WIN_HEIGHT);
 
 static Matrix4x4 worldMatrix(1, 0, 0, WIN_WIDTH * 0.5f, 0, 1, 0, WIN_HEIGHT * 0.5f, 0, 0, 1, 0, 0, 0, 0, 1);
 static std::vector<BaseGeometry*> renderList;
@@ -39,6 +36,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	PlaneGeometry p(100, 100);
 	renderList.push_back(&p);
+
+	mainCam.transform.position = Vector3(0, 0, -10);
 
 	MSG msg;
 	ZeroMemory(&msg, sizeof(msg));
@@ -89,10 +88,11 @@ void Render(BitmapBuffer *bb)
 	//Vertex v1(300, 400, 0, RGB(255, 0, 0)), v2(500, 400, 0, RGB(0, 255, 0)), v3(200, 300, 0, RGB(0, 0, 255));
 
 	//DrawTriangleV2(bb, v1, v2, v3);
+	Matrix4x4 mvp = mainCam.GetProjectionMatrix() * mainCam.GetViewMatrix() * worldMatrix;
 
 	for (int i = 0; i < renderList.size(); i++)
 	{
-		renderList[i]->Draw(bb, worldMatrix);
+		renderList[i]->Draw(bb, mvp);
 	}
 
 	bb->Draw();

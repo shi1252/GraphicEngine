@@ -119,6 +119,64 @@ struct Matrix4x4
 		v.position = temp;
 		return v;
 	}
+	float& operator()(int r, int c)
+	{
+		switch (r)
+		{
+		case 0:
+			switch (c)
+			{
+			case 0:
+				return m00;
+			case 1:
+				return m01;
+			case 2:
+				return m02;
+			case 3:
+				return m03;
+			}
+			break;	
+		case 1:
+			switch (c)
+			{
+			case 0:
+				return m10;
+			case 1:
+				return m11;
+			case 2:
+				return m12;
+			case 3:
+				return m13;
+			}
+			break;
+		case 2:
+			switch (c)
+			{
+			case 0:
+				return m20;
+			case 1:
+				return m21;
+			case 2:
+				return m22;
+			case 3:
+				return m23;
+			}
+			break;
+		case 3:
+			switch (c)
+			{
+			case 0:
+				return m30;
+			case 1:
+				return m31;
+			case 2:
+				return m32;
+			case 3:
+				return m33;
+			}
+			break;
+		}
+	}
 	static Matrix4x4 TransposeMatrix(const Matrix4x4 &m)
 	{
 		return Matrix4x4(
@@ -167,13 +225,13 @@ struct Matrix4x4
 	{
 		return TransposeMatrix(Matrix4x4(Vector4(cosf(degree * DegToRad), sinf(degree * DegToRad), 0, 0), Vector4(-sinf(degree * DegToRad), cos(degree * DegToRad), 0, 0), Vector4(0, 0, 1, 0), Vector4(0, 0, 0, 1)));
 	}
-	static Matrix4x4 ZYXRotateMatrix(Vector3 rotation)
+	static Matrix4x4 YXZRotateMatrix(Vector3 rotation)
 	{
-		return  ZRotateMatrix(rotation.z) * YRotateMatrix(rotation.y) * XRotateMatrix(rotation.x);
+		return  YRotateMatrix(rotation.y) * XRotateMatrix(rotation.x) * ZRotateMatrix(rotation.z);
 	}
-	static Matrix4x4 InverseZYXRotateMatrix(Vector3 rotation)
+	static Matrix4x4 InverseYXZRotateMatrix(Vector3 rotation)
 	{
-		return  InverseXRotateMatrix(rotation.z) * InverseYRotateMatrix(rotation.y) * InverseZRotateMatrix(rotation.x);
+		return  InverseZRotateMatrix(rotation.z) * InverseXRotateMatrix(rotation.x) * InverseYRotateMatrix(rotation.y);
 	}
 	static Matrix4x4 ScaleMatrix(float scale)
 	{
@@ -201,10 +259,10 @@ struct Matrix4x4
 	}
 	static Matrix4x4 TRSMatrix(Vector3 position, Vector3 rotation, Vector3 scale)
 	{
-		return  TranslateMatrix(position) * ZYXRotateMatrix(rotation) * ScaleMatrix(scale);
+		return  TranslateMatrix(position) * YXZRotateMatrix(rotation) * ScaleMatrix(scale);
 	}
 	static Matrix4x4 InverseTRSMatrix(Vector3 position, Vector3 rotation, Vector3 scale)
 	{
-		return  InverseScaleMatrix(scale) * InverseZYXRotateMatrix(rotation) * InverseTranslateMatrix(position);
+		return  InverseScaleMatrix(scale) * InverseYXZRotateMatrix(rotation) * InverseTranslateMatrix(position);
 	}
 };

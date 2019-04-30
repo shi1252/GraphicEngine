@@ -244,20 +244,6 @@ static void DrawTriangleV2(BitmapBuffer *bb, Vertex v1, Vertex v2, Vertex v3)
 			bb->SetColor(x, startY, BaseMath::InterpColor(v1, v2, v3, Vector3(x, startY)));
 			startY += increase;
 		}
-
-		//for (int y = minY.y; y <= maxY.y; y++)
-		//{
-		//	if (midX.y >= maxX.y)
-		//	{
-		//		if (y >= f2 && y <= f1)
-		//			SetPixel(hdc, x, y, color);
-		//	}
-		//	else
-		//	{
-		//		if (y <= f2 && y >= f1)
-		//			SetPixel(hdc, x, y, color);
-		//	}
-		//}
 	}
 }
 

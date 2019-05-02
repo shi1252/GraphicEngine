@@ -1,14 +1,16 @@
 #include "RenderSetting.h"
 #include "GraphicEngine.h"
 
-Camera mainCam(WIN_WIDTH, WIN_HEIGHT);
+Camera *mainCam;
 
-static Matrix4x4 worldMatrix(1, 0, 0, WIN_WIDTH * 0.5f, 0, 1, 0, WIN_HEIGHT * 0.5f, 0, 0, 1, 0, 0, 0, 0, 1);
+static Matrix4x4 worldMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 static std::vector<BaseGeometry*> renderList;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+void Init();
 void Render(BitmapBuffer *bb);
 void Update();
+void Clear();
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -34,10 +36,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 
-	PlaneGeometry p(100, 100);
-	renderList.push_back(&p);
-
-	mainCam.transform.position = Vector3(0, 0, -10);
+	Init();
 
 	MSG msg;
 	ZeroMemory(&msg, sizeof(msg));
@@ -74,10 +73,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
+void Init()
+{
+	mainCam = new Camera(WIN_WIDTH, WIN_HEIGHT);
+
+	PlaneGeometry *p = new PlaneGeometry(10, 10);
+	renderList.push_back(p);
+
+	mainCam->transform.position = Vector3(0, 20, -50);
+}
+
 void Update()
 {
-	//p.transform->position += Vector3(1, 0, 0);
 	renderList[0]->transform->Rotate(Vector3(0, 2.5f, 0));
+}
+
+void Clear()
+{
+	delete mainCam;
+	mainCam = nullptr;
 }
 
 void Render(BitmapBuffer *bb)
@@ -88,7 +102,7 @@ void Render(BitmapBuffer *bb)
 	//Vertex v1(300, 400, 0, RGB(255, 0, 0)), v2(500, 400, 0, RGB(0, 255, 0)), v3(200, 300, 0, RGB(0, 0, 255));
 
 	//DrawTriangleV2(bb, v1, v2, v3);
-	Matrix4x4 mvp = mainCam.GetProjectionMatrix() * mainCam.GetViewMatrix() * worldMatrix;
+	Matrix4x4 mvp = mainCam->GetProjectionMatrix() * mainCam->GetViewMatrix() * worldMatrix;
 
 	for (int i = 0; i < renderList.size(); i++)
 	{

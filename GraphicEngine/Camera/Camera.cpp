@@ -1,12 +1,13 @@
 #include "Camera.h"
+#include "..\RenderSetting.h"
 #include "..\Math\BaseMath.h"
 #include "..\Math\Matrix4x4.h"
 
-Camera::Camera(int w, int h, float fov, float n, float f)
+Camera::Camera(float fov, float n, float f)
 {
-	width = w;
-	height = h;
-	aspect = w / (float)h;
+	width = WIN_WIDTH;
+	height = WIN_HEIGHT;
+	aspect = width / (float)height;
 
 	fieldOfView = fov;
 	near_Plane = n;
@@ -32,7 +33,7 @@ Matrix4x4 Camera::GetProjectionMatrix()
 
 void Camera::SetProjectionMatrix()
 {
-	focalLength = tanf((fieldOfView * DegToRad) / 2.0f);
+	focalLength = 1.f/tanf((fieldOfView * DegToRad) / 2.0f);
 
 	projectionMatrix = Matrix4x4(
 		focalLength / aspect, 0, 0, 0,

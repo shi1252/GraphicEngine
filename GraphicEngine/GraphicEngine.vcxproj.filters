@@ -33,10 +33,10 @@
     <ClCompile Include="Camera\Camera.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Math\BaseMath.cpp">
+    <ClCompile Include="Buffer\BitmapBuffer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Buffer\BitmapBuffer.cpp">
+    <ClCompile Include="Math\Vertex.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

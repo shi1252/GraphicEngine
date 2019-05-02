@@ -19,7 +19,7 @@ public:
 	float focalLength;
 	float aspect;
 
-	Camera(int w, int h, float fov = 60.f, float n = 0.001f, float f = 1000.f);
+	Camera(float fov = 60.f, float n = 0.1f, float f = 1000.f);
 	~Camera();
 
 	Matrix4x4 GetViewMatrix();

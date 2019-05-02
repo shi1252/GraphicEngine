@@ -185,6 +185,9 @@ static void DrawTriangleV2(BitmapBuffer *bb, Vector2 v1, Vector2 v2, Vector2 v3,
 
 static void DrawTriangleV2(BitmapBuffer *bb, Vertex v1, Vertex v2, Vertex v3)
 {
+	v1.position = Vector4::NDCtoScreen(v1.position); //v1.position / v1.position.w;
+	v2.position = Vector4::NDCtoScreen(v2.position); //v2.position / v2.position.w;
+	v3.position = Vector4::NDCtoScreen(v3.position); //v3.position / v3.position.w;
 	std::vector<Vector2> list;
 	list.push_back(v1.position);
 	list.push_back(v2.position);
@@ -241,7 +244,7 @@ static void DrawTriangleV2(BitmapBuffer *bb, Vertex v1, Vertex v2, Vertex v3)
 
 		while (startY != endY)
 		{
-			bb->SetColor(x, startY, BaseMath::InterpColor(v1, v2, v3, Vector3(x, startY)));
+			bb->SetColor(x, startY, Vertex::InterpColor(v1, v2, v3, Vector3(x, startY)));
 			startY += increase;
 		}
 	}

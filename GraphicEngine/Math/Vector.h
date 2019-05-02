@@ -2,6 +2,7 @@
 #include <math.h>
 #include <vector>
 #include "BaseMath.h"
+#include "..\RenderSetting.h"
 
 struct Vector2
 {
@@ -393,6 +394,7 @@ struct Vector3
 		else if (z > 360) z = fmod(z, 360.0f);
 		return Vector3(x, y, z);
 	}
+	static void BarycentricCoordinate(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 &p, Vector3 &out);
 };
 
 struct Vector4
@@ -402,7 +404,16 @@ struct Vector4
 	float z;
 	float w;
 
-	Vector4(float x = 0, float y = 0, float z = 0, float w = 0) : x(x), y(y), z(z), w(w)
+	static const Vector4 zero;
+	static const Vector4 one;
+	static const Vector4 right;
+	static const Vector4 left;
+	static const Vector4 up;
+	static const Vector4 down;
+	static const Vector4 forward;
+	static const Vector4 backward;
+
+	Vector4(float x = 0, float y = 0, float z = 0, float w = 1) : x(x), y(y), z(z), w(w)
 	{
 	}
 
@@ -500,23 +511,9 @@ struct Vector4
 	{
 		return (Length3() * Cos3(v) * v.Normalize3());
 	}
+	static Vector4 NDCtoScreen(Vector4 v)
+	{
+		Vector4 temp = ((v / v.w)+1.f)/2.f;
+		return Vector4(temp.x * WIN_WIDTH, temp.y * WIN_HEIGHT, temp.z, temp.w);
+	}
 };
-
-#ifndef _VECTOR__
-#define _VECTOR__
-const Vector2 Vector2::zero(.0f, .0f);
-const Vector2 Vector2::one(1.0f, 1.0f);
-const Vector2 Vector2::right(1.0f, 0.0f);
-const Vector2 Vector2::left(-1.0f, 0.0f);
-const Vector2 Vector2::up(0.0f, 1.0f);
-const Vector2 Vector2::down(0.0f, -1.0f);
-
-const Vector3 Vector3::zero(.0f, .0f, .0f);
-const Vector3 Vector3::one(1.0f, 1.0f, 1.0f);
-const Vector3 Vector3::right(1.0f, 0.0f, 0.0f);
-const Vector3 Vector3::left(-1.0f, 0.0f, 0.0f);
-const Vector3 Vector3::up(0.0f, 1.0f, 0.0f);
-const Vector3 Vector3::down(0.0f, -1.0f, 0.0f);
-const Vector3 Vector3::forward(0.0f, 0.0f, 1.0f);
-const Vector3 Vector3::backward(0.0f, 0.0f, -1.0f);
-#endif

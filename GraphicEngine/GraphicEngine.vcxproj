@@ -88,6 +88,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -143,10 +144,10 @@
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="GraphicEngine.cpp" />
     <ClCompile Include="Geometry\BaseGeometry.cpp" />
-    <ClCompile Include="Math\BaseMath.cpp" />
     <ClCompile Include="Math\Matrix.cpp" />
     <ClCompile Include="Math\Transform.cpp" />
     <ClCompile Include="Math\Vector.cpp" />
+    <ClCompile Include="Math\Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Buffer\BitmapBuffer.h" />

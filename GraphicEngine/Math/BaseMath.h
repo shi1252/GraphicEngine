@@ -40,6 +40,4 @@ public:
 	//	DWORD b1 = ((DWORD)16711680 & color1) >> 16, b2 = ((DWORD)16711680 & color2) >> 16;
 	//	return (Lerp(r1, r2, ratio) | Lerp(g1, g2, ratio) << 8 | Lerp(b1, b2, ratio) << 16);
 	//}
-	static DWORD InterpColor(Vertex v1, Vertex v2, Vertex v3, Vector3 p);
-	static void BarycentricCoordinate(Vector3 &v1, Vector3 &v2, Vector3 &v3, Vector3 &p, Vector3 &out);
 };

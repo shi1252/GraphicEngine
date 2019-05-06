@@ -1,5 +1,6 @@
 #include "RenderSetting.h"
 #include "GraphicEngine.h"
+#include <time.h>
 
 Camera *mainCam;
 
@@ -11,6 +12,8 @@ void Init();
 void Render(BitmapBuffer *bb);
 void Update();
 void Clear();
+
+float oldTime = clock();
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -42,15 +45,16 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	ZeroMemory(&msg, sizeof(msg));
 	while (msg.message != WM_QUIT)
 	{
+		Update();
+		Render(&buffer);
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		Update();
-		Render(&buffer);
 	}
 
+	Clear();
 	UnregisterClass(szWndAppName, wc.hInstance);
 	return 0;
 }
@@ -80,16 +84,45 @@ void Init()
 	PlaneGeometry *p = new PlaneGeometry(10, 10);
 	renderList.push_back(p);
 
-	mainCam->transform.position = Vector3(0, 20, -50);
+	const float p4 = 0.0625f;
+	const float p8 = 0.125f;
+	const float p12 = 0.1875f;
+	const float p16 = 0.25f;
+
+	p->vertices[1].uv = Vector2(p8, 1.f - p16);
+	p->vertices[0].uv = Vector2(p8, 1.f - p8);
+	p->vertices[3].uv = Vector2(p16, 1.f - p8);
+	p->vertices[2].uv = Vector2(p16, 1.f - p16);
+	p->texture = new Image(".\\Textures\\Steve.bmp");
+
+	mainCam->transform.position = Vector3(0, 0, -100);
 }
 
 void Update()
 {
+	float curTime = clock();
+	float deltaTime = (oldTime - curTime)/CLOCKS_PER_SEC;
+
+	if (GetAsyncKeyState('W'))
+		mainCam->transform.Translate(Vector3::up, 1.0f * deltaTime);
+	if (GetAsyncKeyState('S'))
+		mainCam->transform.Translate(Vector3::down, 1.0f * deltaTime);
+	if (GetAsyncKeyState('A'))
+		mainCam->transform.Translate(Vector3::left, 1.0f * deltaTime);
+	if (GetAsyncKeyState('D'))
+		mainCam->transform.Translate(Vector3::right, 1.0f * deltaTime);
+
 	renderList[0]->transform->Rotate(Vector3(0, 2.5f, 0));
+
+	oldTime = curTime;
 }
 
 void Clear()
 {
+	for (int i = 0; i < renderList.size(); i++)
+		renderList[i]->~BaseGeometry();
+	renderList.clear();
+
 	delete mainCam;
 	mainCam = nullptr;
 }
@@ -99,9 +132,9 @@ void Render(BitmapBuffer *bb)
 	bb->Clear();
 
 	// Call DrawFunction
-	//Vertex v1(300, 400, 0, RGB(255, 0, 0)), v2(500, 400, 0, RGB(0, 255, 0)), v3(200, 300, 0, RGB(0, 0, 255));
-
+	//Vertex v1(-0.1.f, 0.1.f, 0, RGB(255, 0, 0)), v2(-0.1.f, -0.1.f, 0, RGB(0, 255, 0)), v3(0, 0, 0, RGB(0, 0, 255));
 	//DrawTriangleV2(bb, v1, v2, v3);
+	
 	Matrix4x4 mvp = mainCam->GetProjectionMatrix() * mainCam->GetViewMatrix() * worldMatrix;
 
 	for (int i = 0; i < renderList.size(); i++)

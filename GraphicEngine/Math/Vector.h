@@ -26,6 +26,13 @@ struct Vector2
 
 		return *this;
 	}
+	Vector2& operator+=(const float v)
+	{
+		this->x += v;
+		this->y += v;
+
+		return *this;
+	}
 	Vector2& operator-=(const Vector2 &v)
 	{
 		this->x -= v.x;
@@ -33,11 +40,26 @@ struct Vector2
 
 		return *this;
 	}
+	Vector2& operator-=(const float v)
+	{
+		this->x -= v;
+		this->y -= v;
+
+		return *this;
+	}
 	Vector2 operator+(const Vector2 &v) const
 	{
 		return Vector2(*this) += v;
 	}
+	Vector2 operator+(const float v) const
+	{
+		return Vector2(*this) += v;
+	}
 	Vector2 operator-(const Vector2 &v) const
+	{
+		return Vector2(*this) -= v;
+	}
+	Vector2 operator-(const float v) const
 	{
 		return Vector2(*this) -= v;
 	}
@@ -228,6 +250,11 @@ struct Vector3
 	Vector3(float x = 0, float y = 0, float z = 0) : x(x), y(y), z(z)
 	{
 	}
+	Vector3(const Vector2 &v)
+	{
+		x = v.x;
+		y = v.y;
+	}
 
 	operator Vector2()
 	{
@@ -241,6 +268,14 @@ struct Vector3
 
 		return *this;
 	}
+	Vector3& operator+=(const float v)
+	{
+		this->x += v;
+		this->y += v;
+		this->z += v;
+
+		return *this;
+	}
 	Vector3& operator-=(const Vector3 &v)
 	{
 		this->x -= v.x;
@@ -249,11 +284,27 @@ struct Vector3
 
 		return *this;
 	}
+	Vector3& operator-=(const float v)
+	{
+		this->x -= v;
+		this->y -= v;
+		this->z -= v;
+
+		return *this;
+	}
 	Vector3 operator+(const Vector3 &v) const
 	{
 		return Vector3(*this) += v;
 	}
+	Vector3 operator+(const float v) const
+	{
+		return Vector3(*this) += v;
+	}
 	Vector3 operator-(const Vector3 &v) const
+	{
+		return Vector3(*this) -= v;
+	}
+	Vector3 operator-(const float v) const
 	{
 		return Vector3(*this) -= v;
 	}
@@ -394,7 +445,7 @@ struct Vector3
 		else if (z > 360) z = fmod(z, 360.0f);
 		return Vector3(x, y, z);
 	}
-	static void BarycentricCoordinate(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 &p, Vector3 &out);
+	static void BarycentricCoordinate(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 p, Vector3 &out);
 };
 
 struct Vector4
@@ -434,6 +485,15 @@ struct Vector4
 
 		return *this;
 	}
+	Vector4& operator+=(const float v)
+	{
+		this->x += v;
+		this->y += v;
+		this->z += v;
+		this->w += v;
+
+		return *this;
+	}
 	Vector4& operator-=(const Vector4 &v)
 	{
 		this->x -= v.x;
@@ -443,11 +503,28 @@ struct Vector4
 
 		return *this;
 	}
+	Vector4& operator-=(const float v)
+	{
+		this->x -= v;
+		this->y -= v;
+		this->z -= v;
+		this->w -= v;
+
+		return *this;
+	}
 	Vector4 operator+(const Vector4 &v) const
 	{
 		return Vector4(*this) += v;
 	}
+	Vector4 operator+(const float v) const
+	{
+		return Vector4(*this) += v;
+	}
 	Vector4 operator-(const Vector4 &v) const
+	{
+		return Vector4(*this) -= v;
+	}
+	Vector4 operator-(const float v) const
 	{
 		return Vector4(*this) -= v;
 	}

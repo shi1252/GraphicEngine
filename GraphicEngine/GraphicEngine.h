@@ -7,3 +7,5 @@
 #include "Draw\Draw.h"
 #include ".\Geometry\PlaneGeometry.h"
 #include ".\Math\Matrix2x2.h"
+
+#include ".\Framework\Image.h"

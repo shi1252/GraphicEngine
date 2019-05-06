@@ -18,6 +18,9 @@ public:
 		:position(Vector4(x, y, z)), uv(Vector2(uvx, uvy)), color(0) {}
 	Vertex(Vector4 v, Vector2 uv)
 		:position(v), uv(uv), color(0) {}
+	Vertex(Vector4 v, Vector2 uv, DWORD color)
+		:position(v), uv(uv), color(color) {}
 
 	static DWORD InterpColor(Vertex v1, Vertex v2, Vertex v3, Vector3 p);
+	static Vector2 InterpUV(Vertex v1, Vertex v2, Vertex v3, Vector3 p);
 };

@@ -4,6 +4,7 @@
 #include "..\RenderSetting.h"
 #include "..\Buffer\BitmapBuffer.h"
 #include "..\Math\Vertex.h"
+#include "..\Framework\Image.h"
 struct Vector2;
 
 static void DrawDot(BitmapBuffer *bb, Vector2 pos, COLORREF color)
@@ -183,7 +184,7 @@ static void DrawTriangleV2(BitmapBuffer *bb, Vector2 v1, Vector2 v2, Vector2 v3,
 	}
 }
 
-static void DrawTriangleV2(BitmapBuffer *bb, Vertex v1, Vertex v2, Vertex v3)
+static void DrawTriangleV2Color(BitmapBuffer *bb, Vertex v1, Vertex v2, Vertex v3)
 {
 	v1.position = Vector4::NDCtoScreen(v1.position); //v1.position / v1.position.w;
 	v2.position = Vector4::NDCtoScreen(v2.position); //v2.position / v2.position.w;
@@ -245,6 +246,73 @@ static void DrawTriangleV2(BitmapBuffer *bb, Vertex v1, Vertex v2, Vertex v3)
 		while (startY != endY)
 		{
 			bb->SetColor(x, startY, Vertex::InterpColor(v1, v2, v3, Vector3(x, startY)));
+			startY += increase;
+		}
+	}
+}
+
+static void DrawTriangleV2Texture(BitmapBuffer *bb, Vertex v1, Vertex v2, Vertex v3, Image *texture)
+{
+	v1.position = Vector4::NDCtoScreen(v1.position); //v1.position / v1.position.w;
+	v2.position = Vector4::NDCtoScreen(v2.position); //v2.position / v2.position.w;
+	v3.position = Vector4::NDCtoScreen(v3.position); //v3.position / v3.position.w;
+	std::vector<Vector2> list;
+	list.push_back(v1.position);
+	list.push_back(v2.position);
+	list.push_back(v3.position);
+
+	int index = Vector2::MinXIndex(list);
+	Vector2 minX = list[index];
+	list.erase(list.begin() + index);
+	index = Vector2::MinXIndex(list);
+	Vector2 midX = list[index];
+	list.erase(list.begin() + index);
+	Vector2 maxX = list[0];
+	list.clear();
+
+	list.push_back(v1.position);
+	list.push_back(v2.position);
+	list.push_back(v3.position);
+	index = Vector2::MinYIndex(list);
+	Vector2 minY = list[index];
+	list.erase(list.begin() + index);
+	index = Vector2::MinYIndex(list);
+	Vector2 midY = list[index];
+	list.erase(list.begin() + index);
+	Vector2 maxY = list[0];
+	list.clear();
+
+	float m1 = (midX.y - minX.y) / (midX.x - minX.x);
+	if ((midX.x - minX.x) == 0)
+		m1 = 0;
+	float m2 = (maxX.y - midX.y) / (maxX.x - midX.x);
+	if ((maxX.x - midX.x) == 0)
+		m2 = 0;
+	float m3 = (maxX.y - minX.y) / (maxX.x - minX.x);
+	if ((maxX.x - minX.x) == 0)
+		m3 = 0;
+
+	float y1 = midX.y - m1 * midX.x;
+	float y2 = midX.y - m2 * midX.x;
+	float y3 = minX.y - m3 * minX.x;
+
+	for (int x = minX.x; x <= maxX.x; x++)
+	{
+		float f1 = 0;
+		if (x < midX.x)
+			f1 = m1 * x + y1;
+		else
+			f1 = m2 * x + y2;
+		float f2 = m3 * x + y3;
+
+		int startY = BaseMath::Clamp(f1, minY.y, maxY.y), endY = BaseMath::Clamp(f2, minY.y, maxY.y);
+		int increase = 1;
+		if (f1 > f2)
+			increase = -1;
+
+		while (startY != endY)
+		{
+			bb->SetColor(x, startY, texture->GetColorByUV(Vertex::InterpUV(v1, v2, v3, Vector3(x, startY))));
 			startY += increase;
 		}
 	}

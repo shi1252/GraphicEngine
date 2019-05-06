@@ -14,3 +14,11 @@ DWORD Vertex::InterpColor(Vertex v1, Vertex v2, Vertex v3, Vector3 p)
 
 	return ((r1 | r2 | r3) | (g1 | g2 | g3) << 8 | (b1 | b2 | b3) << 16);
 }
+
+Vector2 Vertex::InterpUV(Vertex v1, Vertex v2, Vertex v3, Vector3 p)
+{
+	Vector3 out = Vector3::zero;
+	Vector3::BarycentricCoordinate(v1.position, v2.position, v3.position, p, out);
+
+	return (v1.uv * out.x + v2.uv * out.y + v3.uv * out.z);
+}

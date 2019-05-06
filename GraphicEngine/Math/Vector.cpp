@@ -43,7 +43,7 @@ Vector4 operator*(float n, const Vector4 & v)
 	return Vector4(n*v.x, n*v.y, n*v.z, n*v.w);
 }
 
-void Vector3::BarycentricCoordinate(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 & p, Vector3 & out)
+void Vector3::BarycentricCoordinate(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 p, Vector3 & out)
 {
 	Vector3 u = v2 - v1;
 	Vector3 v = v3 - v1;

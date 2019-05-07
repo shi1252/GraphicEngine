@@ -92,6 +92,12 @@
     <ClInclude Include="Framework\Image.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Geometry\CubeGeometry.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\PrimitiveGeomtery.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Textures\Steve.bmp">

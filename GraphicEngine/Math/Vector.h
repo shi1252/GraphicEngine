@@ -418,6 +418,36 @@ struct Vector3
 		}
 		return index;
 	}
+	static int MinYIndex(Vector3 *v, int length)
+	{
+		if (!v)
+			throw "Trying to access null array";
+		Vector3 &min = v[0];
+		int index = 0;
+		for (int i = 1; i < length; i++)
+		{
+			if (min.y > v[i].y)
+			{
+				min = v[i];
+				index = i;
+			}
+		}
+		return index;
+	}
+	static int MinYIndex(std::vector<Vector3> list)
+	{
+		Vector3 &min = list[0];
+		int index = 0;
+		for (int i = 1; i < list.size(); i++)
+		{
+			if (min.y > list[i].y)
+			{
+				min = list[i];
+				index = i;
+			}
+		}
+		return index;
+	}
 	static Vector3 Lerp(Vector3 &v1, Vector3 &v2, float ratio)
 	{
 		return Vector3(BaseMath::Lerp(v1.x, v2.x, ratio), BaseMath::Lerp(v1.y, v2.y, ratio), BaseMath::Lerp(v1.z, v2.z, ratio));
@@ -588,9 +618,109 @@ struct Vector4
 	{
 		return (Length3() * Cos3(v) * v.Normalize3());
 	}
+	static Vector4& MinX(Vector4 &v1, Vector4 &v2)
+	{
+		if (v1.x > v2.x)
+			return v2;
+		return v1;
+	}
+	static Vector4& MinX(Vector4 *v, int length)
+	{
+		if (!v)
+			throw "Trying to access null array";
+		Vector4 &min = v[0];
+		for (int i = 1; i < length; i++)
+		{
+			if (min.x > v[i].x)
+			{
+				min = v[i];
+			}
+		}
+		return min;
+	}
+	static int MinXIndex(Vector4 *v, int length)
+	{
+		if (!v)
+			throw "Trying to access null array";
+		Vector4 &min = v[0];
+		int index = 0;
+		for (int i = 1; i < length; i++)
+		{
+			if (min.x > v[i].x)
+			{
+				min = v[i];
+				index = i;
+			}
+		}
+		return index;
+	}
+	static int MinXIndex(std::vector<Vector4> list)
+	{
+		Vector4 &min = list[0];
+		int index = 0;
+		for (int i = 1; i < list.size(); i++)
+		{
+			if (min.x > list[i].x)
+			{
+				min = list[i];
+				index = i;
+			}
+		}
+		return index;
+	}
+	static Vector4& MinY(Vector4 &v1, Vector4 &v2)
+	{
+		if (v1.y > v2.y)
+			return v2;
+		return v1;
+	}
+	static Vector4& MinY(Vector4 *v, int length)
+	{
+		if (!v)
+			throw "Trying to access null array";
+		Vector4 &min = v[0];
+		for (int i = 1; i < length; i++)
+		{
+			if (min.y > v[i].y)
+			{
+				min = v[i];
+			}
+		}
+		return min;
+	}
+	static int MinYIndex(Vector4 *v, int length)
+	{
+		if (!v)
+			throw "Trying to access null array";
+		Vector4 &min = v[0];
+		int index = 0;
+		for (int i = 1; i < length; i++)
+		{
+			if (min.y > v[i].y)
+			{
+				min = v[i];
+				index = i;
+			}
+		}
+		return index;
+	}
+	static int MinYIndex(std::vector<Vector4> list)
+	{
+		Vector4 &min = list[0];
+		int index = 0;
+		for (int i = 1; i < list.size(); i++)
+		{
+			if (min.y > list[i].y)
+			{
+				min = list[i];
+				index = i;
+			}
+		}
+		return index;
+	}
 	static Vector4 NDCtoScreen(Vector4 v)
 	{
-		Vector4 temp = ((v / v.w)+1.f)/2.f;
-		return Vector4(temp.x * WIN_WIDTH, temp.y * WIN_HEIGHT, temp.z, temp.w);
+		Vector4 temp = ((v / fabs(v.w))+1.f)/2.f;
+		return Vector4(temp.x * WIN_WIDTH, temp.y * WIN_HEIGHT, temp.z, v.w);
 	}
 };

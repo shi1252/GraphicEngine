@@ -2,6 +2,8 @@
 #include "GraphicEngine.h"
 #include <time.h>
 
+BitmapBuffer *buffer;
+
 Camera *mainCam;
 
 static Matrix4x4 worldMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
@@ -9,7 +11,7 @@ static std::vector<BaseGeometry*> renderList;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 void Init();
-void Render(BitmapBuffer *bb);
+void Render();
 void Update();
 void Clear();
 
@@ -34,7 +36,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	MoveWindow(hWnd, window.left, window.top, WIN_WIDTH + x, WIN_HEIGHT + y, true);
 	GetClientRect(hWnd, &client);
 
-	BitmapBuffer buffer(hWnd, WIN_WIDTH, WIN_HEIGHT, 0xff888888);
+	buffer = new BitmapBuffer(hWnd, WIN_WIDTH, WIN_HEIGHT, 0xff888888);
 
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
@@ -46,7 +48,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	while (msg.message != WM_QUIT)
 	{
 		Update();
-		Render(&buffer);
+		Render();
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
@@ -79,40 +81,74 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 void Init()
 {
-	mainCam = new Camera(WIN_WIDTH, WIN_HEIGHT);
+	mainCam = new Camera();
+	buffer->SetDepthDefault(mainCam->far_Plane);
 
-	PlaneGeometry *p = new PlaneGeometry(10, 10);
-	renderList.push_back(p);
+	PlaneGeometry *p = new PlaneGeometry(1, 1);
+	CubeGeometry *c = new CubeGeometry(1, 1, 1);
+	//renderList.push_back(p);
+	renderList.push_back(c);
 
 	const float p4 = 0.0625f;
 	const float p8 = 0.125f;
 	const float p12 = 0.1875f;
 	const float p16 = 0.25f;
 
-	p->vertices[1].uv = Vector2(p8, 1.f - p16);
-	p->vertices[0].uv = Vector2(p8, 1.f - p8);
-	p->vertices[3].uv = Vector2(p16, 1.f - p8);
-	p->vertices[2].uv = Vector2(p16, 1.f - p16);
+	p->vertices[0].uv = Vector2(p8, 1.f - p16);
+	p->vertices[1].uv = Vector2(p8, 1.f - p8);
+	p->vertices[2].uv = Vector2(p16, 1.f - p8);
+	p->vertices[3].uv = Vector2(p16, 1.f - p16);
 	p->texture = new Image(".\\Textures\\Steve.bmp");
 
-	mainCam->transform.position = Vector3(0, 0, -100);
+	c->vertices[0].uv = Vector2(p8, 1.f - p16);
+	c->vertices[1].uv = Vector2(p8, 1.f - p8);
+	c->vertices[2].uv = Vector2(p16, 1.f - p8);
+	c->vertices[3].uv = Vector2(p16, 1.f - p16);
+	c->vertices[4].uv = Vector2(p8 + p16, 1.f - p16);
+	c->vertices[5].uv = Vector2(p8 + p16, 1.f - p8);
+	c->vertices[6].uv = Vector2(0.5f, 1.f - p8);
+	c->vertices[7].uv = Vector2(0.5f, 1.f - p16);
+	c->vertices[8].uv = Vector2(0.f, 1.f - p16);
+	c->vertices[9].uv = Vector2(0.f, 1.f - p8);
+	c->vertices[10].uv = Vector2(p8, 1.f - p8);
+	c->vertices[11].uv = Vector2(p8, 1.f - p16);
+	c->vertices[12].uv = Vector2(p16, 1.f - p16);
+	c->vertices[13].uv = Vector2(p16, 1.f - p8);
+	c->vertices[14].uv = Vector2(p8 + p16, 1.f - p8);
+	c->vertices[15].uv = Vector2(p8 + p16, 1.f - p16);
+	c->vertices[20].uv = Vector2(p8, 1.f - p8);
+	c->vertices[21].uv = Vector2(p8, 1.f);
+	c->vertices[22].uv = Vector2(p16, 1.f);
+	c->vertices[23].uv = Vector2(p16, 1.f - p8);
+	c->vertices[16].uv = Vector2(p16, 1.f - p8); 
+	c->vertices[17].uv = Vector2(p16, 1.f);
+	c->vertices[18].uv = Vector2(p8 + p16, 1.f);
+	c->vertices[19].uv = Vector2(p8 + p16, 1.f - p8);
+	c->texture = new Image(".\\Textures\\Steve.bmp");
+
+	mainCam->transform.position = Vector3(0, 0, -10);
 }
 
 void Update()
 {
 	float curTime = clock();
-	float deltaTime = (oldTime - curTime)/CLOCKS_PER_SEC;
+	float deltaTime = (curTime - oldTime)/CLOCKS_PER_SEC;
 
 	if (GetAsyncKeyState('W'))
-		mainCam->transform.Translate(Vector3::up, 1.0f * deltaTime);
+		mainCam->transform.Translate(Vector3::up, 1.0f);// *deltaTime);
 	if (GetAsyncKeyState('S'))
-		mainCam->transform.Translate(Vector3::down, 1.0f * deltaTime);
+		mainCam->transform.Translate(Vector3::down, 1.0f);// *deltaTime);
 	if (GetAsyncKeyState('A'))
-		mainCam->transform.Translate(Vector3::left, 1.0f * deltaTime);
+		mainCam->transform.Translate(Vector3::left, 1.0f);// *deltaTime);
 	if (GetAsyncKeyState('D'))
-		mainCam->transform.Translate(Vector3::right, 1.0f * deltaTime);
+		mainCam->transform.Translate(Vector3::right, 1.0f);// *deltaTime);
+	if (GetAsyncKeyState('Q'))
+		mainCam->transform.Translate(Vector3::forward, 1.0f);// *deltaTime);
+	if (GetAsyncKeyState('E'))
+		mainCam->transform.Translate(Vector3::backward, 1.0f);// *deltaTime);
 
-	renderList[0]->transform->Rotate(Vector3(0, 2.5f, 0));
+	renderList[0]->transform->Rotate(Vector3(1.f, 0.f, 0));
+	//renderList[0]->transform->Translate(Vector3(1.f, 0.f, 0), 1.0f);
 
 	oldTime = curTime;
 }
@@ -127,9 +163,9 @@ void Clear()
 	mainCam = nullptr;
 }
 
-void Render(BitmapBuffer *bb)
+void Render()
 {
-	bb->Clear();
+	buffer->Clear();
 
 	// Call DrawFunction
 	//Vertex v1(-0.1.f, 0.1.f, 0, RGB(255, 0, 0)), v2(-0.1.f, -0.1.f, 0, RGB(0, 255, 0)), v3(0, 0, 0, RGB(0, 0, 255));
@@ -139,8 +175,8 @@ void Render(BitmapBuffer *bb)
 
 	for (int i = 0; i < renderList.size(); i++)
 	{
-		renderList[i]->Draw(bb, mvp);
+		renderList[i]->Draw(buffer, mvp);
 	}
 
-	bb->Draw();
+	buffer->Draw();
 }

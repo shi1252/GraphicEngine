@@ -109,15 +109,10 @@ struct Matrix4x4
 		v = temp;
 		return v;
 	}
-	Vertex operator*(Vertex &v)
+	Vertex operator*(Vertex v)
 	{
 		Vector4 temp = (*this) * v.position;
-		//temp.x = v.position.x * m00 + v.position.y * m01 + v.position.z * m02 + 1 * m03;
-		//temp.y = v.position.x * m10 + v.position.y * m11 + v.position.z * m12 + 1 * m13;
-		//temp.z = v.position.x * m20 + v.position.y * m21 + v.position.z * m22 + 1 * m23;
 		return Vertex(temp, v.uv, v.color);
-		v.position = temp;
-		return v;
 	}
 	float& operator()(int r, int c)
 	{

@@ -18,10 +18,12 @@ private:
 	HBITMAP frontBitmap;
 	HBITMAP backBitmap;
 
-	float depthDefault;
 	BYTE *bits;
 	float *depthBuffer;
 public:
+	float minDepth;
+	float maxDepth;
+
 	BitmapBuffer(HWND hWnd, UINT width, UINT height, DWORD bgColor = 0xff000000);
 	~BitmapBuffer();
 
@@ -31,7 +33,7 @@ public:
 	void SetColor(int x, int y, DWORD color);
 	void SetDepth(int x, int y, float depth);
 	float GetDepth(int x, int y);
-	void SetDepthDefault(float v);
+	void SetDepthDefault(float min, float max);
 
 	UINT GetWidth() { return width; }
 	UINT GetHeight() { return height; }

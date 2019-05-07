@@ -327,11 +327,17 @@ static void DrawTriangleV2Texture(BitmapBuffer *bb, Vertex v1, Vertex v2, Vertex
 
 		while (startY != endY)
 		{
-			float depth = fabs((w1 + startY * mw));
-			if (bb->GetDepth(x, startY) >= depth)
+			float curDepth = bb->GetDepth(x, startY);
+			if (curDepth < bb->maxDepth)
+				curDepth = curDepth;
+			float depth = -(w1 + startY * mw);
+			if (depth <= bb->maxDepth && depth >= bb->minDepth)
 			{
-				bb->SetColor(x, startY, texture->GetColorByUV(Vertex::InterpUV(v1, v2, v3, Vector4(x, startY, z1 + startY * mz, w1 + startY * mw))));
-				bb->SetDepth(x, startY, depth);
+				if (curDepth > depth)
+				{
+					bb->SetColor(x, startY, texture->GetColorByUV(Vertex::InterpUV(v1, v2, v3, Vector4(x, startY, z1 + startY * mz, w1 + startY * mw))));
+					bb->SetDepth(x, startY, depth);
+				}
 			}
 			startY += increase;
 		}

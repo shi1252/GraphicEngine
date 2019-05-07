@@ -82,7 +82,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 void Init()
 {
 	mainCam = new Camera();
-	buffer->SetDepthDefault(mainCam->far_Plane);
+	buffer->SetDepthDefault(mainCam->near_Plane, mainCam->far_Plane);
 
 	PlaneGeometry *p = new PlaneGeometry(1, 1);
 	CubeGeometry *c = new CubeGeometry(1, 1, 1);

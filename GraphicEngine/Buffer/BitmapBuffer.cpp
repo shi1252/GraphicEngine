@@ -6,7 +6,8 @@
 BitmapBuffer::BitmapBuffer(HWND hWnd, UINT width, UINT height, DWORD bgColor):
 	hWnd(hWnd), width(width), height(height), bgColor(bgColor & 0x00ffffff), scanlineCount(width * 3 + ((width * 3) & 3))
 {
-	depthDefault = 1000.f;
+	minDepth = 0.1f;
+	maxDepth = 1000.f;
 	depthBuffer = new float[width * height];
 
 	hdc = GetDC(hWnd);
@@ -49,7 +50,7 @@ void BitmapBuffer::Clear()
 		memcpy(bits + (i * scanlineCount), bits, scanlineCount);
 
 	for (int i = 0; i < width; i++)
-		depthBuffer[i] = depthDefault;
+		depthBuffer[i] = maxDepth;
 
 	for (int i = 1; i < height; i++)
 		memcpy(depthBuffer + (i * width), depthBuffer, sizeof(float) * width);
@@ -73,7 +74,8 @@ float BitmapBuffer::GetDepth(int x, int y)
 	return depthBuffer[y * width + x];
 }
 
-void BitmapBuffer::SetDepthDefault(float v)
+void BitmapBuffer::SetDepthDefault(float min, float max)
 {
-	depthDefault = v;
+	minDepth = min;
+	maxDepth = max;
 }

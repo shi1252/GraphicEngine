@@ -10,9 +10,9 @@ public:
 	{
 		transform = new Transform();
 
-		width = width;
-		height = height;
-		depth = depth;
+		width = width * .5f;
+		height = height * .5f;
+		depth = depth * .5f;
 
 		vertices = new Vertex[24]
 		{
@@ -36,15 +36,15 @@ public:
 			Matrix4x4::TranslateMatrix(Vector3(width, 0, 0)) * Matrix4x4::YRotateMatrix(-90) * Vertex(depth, height, 0, color),
 			Matrix4x4::TranslateMatrix(Vector3(width, 0, 0)) * Matrix4x4::YRotateMatrix(-90) * Vertex(depth, -height, 0, color),
 
-			Matrix4x4::TranslateMatrix(Vector3(0, -height, 0)) * Matrix4x4::XRotateMatrix(90) * Vertex(-width, -depth, 0, color),
-			Matrix4x4::TranslateMatrix(Vector3(0, -height, 0)) * Matrix4x4::XRotateMatrix(90) * Vertex(-width, depth, 0, color),
-			Matrix4x4::TranslateMatrix(Vector3(0, -height, 0)) * Matrix4x4::XRotateMatrix(90) * Vertex(width, depth, 0, color),
-			Matrix4x4::TranslateMatrix(Vector3(0, -height, 0)) * Matrix4x4::XRotateMatrix(90) * Vertex(width, -depth, 0, color),
+			Matrix4x4::TranslateMatrix(Vector3(0, height, 0)) * Matrix4x4::XRotateMatrix(90) * Vertex(-width, -depth, 0, color),
+			Matrix4x4::TranslateMatrix(Vector3(0, height, 0)) * Matrix4x4::XRotateMatrix(90) * Vertex(-width, depth, 0, color),
+			Matrix4x4::TranslateMatrix(Vector3(0, height, 0)) * Matrix4x4::XRotateMatrix(90) * Vertex(width, depth, 0, color),
+			Matrix4x4::TranslateMatrix(Vector3(0, height, 0)) * Matrix4x4::XRotateMatrix(90) * Vertex(width, -depth, 0, color),
 
-			Matrix4x4::TranslateMatrix(Vector3(0, height, 0)) * Matrix4x4::XRotateMatrix(-90) * Vertex(-width, -depth, 0, color),
-			Matrix4x4::TranslateMatrix(Vector3(0, height, 0)) * Matrix4x4::XRotateMatrix(-90) * Vertex(-width, depth, 0, color),
-			Matrix4x4::TranslateMatrix(Vector3(0, height, 0)) * Matrix4x4::XRotateMatrix(-90) * Vertex(width, depth, 0, color),
-			Matrix4x4::TranslateMatrix(Vector3(0, height, 0)) * Matrix4x4::XRotateMatrix(-90) * Vertex(width, -depth, 0, color)
+			Matrix4x4::TranslateMatrix(Vector3(0, -height, 0)) * Matrix4x4::XRotateMatrix(-90) * Vertex(-width, -depth, 0, color),
+			Matrix4x4::TranslateMatrix(Vector3(0, -height, 0)) * Matrix4x4::XRotateMatrix(-90) * Vertex(-width, depth, 0, color),
+			Matrix4x4::TranslateMatrix(Vector3(0, -height, 0)) * Matrix4x4::XRotateMatrix(-90) * Vertex(width, depth, 0, color),
+			Matrix4x4::TranslateMatrix(Vector3(0, -height, 0)) * Matrix4x4::XRotateMatrix(-90) * Vertex(width, -depth, 0, color)
 		};
 		vertexCount = 24;
 		indices = new int[36]

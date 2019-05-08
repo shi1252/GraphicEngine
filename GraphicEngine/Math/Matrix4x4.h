@@ -88,7 +88,7 @@ struct Matrix4x4
 	//		m33
 	//	);
 	//}
-	Vector3 operator*(Vector3 &v)
+	Vector3 operator*(Vector3 v)
 	{
 		Vector3 temp = v;
 		temp.x = v.x * m00 + v.y * m01 + v.z * m02 + 1 * m03;
@@ -98,7 +98,7 @@ struct Matrix4x4
 		v = temp;
 		return v;
 	}
-	Vector4 operator*(Vector4 &v)
+	Vector4 operator*(Vector4 v)
 	{
 		Vector4 temp = v;
 		temp.x = v.x * m00 + v.y * m01 + v.z * m02 + v.w * m03;

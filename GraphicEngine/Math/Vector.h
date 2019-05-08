@@ -300,6 +300,10 @@ struct Vector3
 	{
 		return Vector3(*this) += v;
 	}
+	Vector3 operator-() const
+	{
+		return Vector3(-x, -y, -z);
+	}
 	Vector3 operator-(const Vector3 &v) const
 	{
 		return Vector3(*this) -= v;
@@ -717,10 +721,5 @@ struct Vector4
 			}
 		}
 		return index;
-	}
-	static Vector4 NDCtoScreen(Vector4 v)
-	{
-		Vector4 temp = ((v / fabs(v.w))+1.f)/2.f;
-		return Vector4(temp.x * WIN_WIDTH, temp.y * WIN_HEIGHT, temp.z, v.w);
 	}
 };

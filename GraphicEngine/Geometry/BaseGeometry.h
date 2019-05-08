@@ -1,6 +1,5 @@
 #pragma once
 #include "..\Math\Vertex.h"
-#include "..\Draw\Draw.h"
 #include "..\Buffer\BitmapBuffer.h"
 
 class Transform;

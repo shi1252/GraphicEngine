@@ -82,9 +82,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 void Init()
 {
 	mainCam = new Camera();
-	buffer->SetDepthDefault(mainCam->near_Plane, mainCam->far_Plane);
+	//buffer->SetDepthDefault(mainCam->near_Plane, mainCam->far_Plane);
 
-	PlaneGeometry *p = new PlaneGeometry(1, 1);
+	PlaneGeometry *p = new PlaneGeometry(10, 10);
 	CubeGeometry *c = new CubeGeometry(1, 1, 1);
 	//renderList.push_back(p);
 	renderList.push_back(c);
@@ -99,6 +99,7 @@ void Init()
 	p->vertices[2].uv = Vector2(p16, 1.f - p8);
 	p->vertices[3].uv = Vector2(p16, 1.f - p16);
 	p->texture = new Image(".\\Textures\\Steve.bmp");
+	p->transform->Translate(Vector3(0, 0, 100));
 
 	c->vertices[0].uv = Vector2(p8, 1.f - p16);
 	c->vertices[1].uv = Vector2(p8, 1.f - p8);
@@ -116,14 +117,14 @@ void Init()
 	c->vertices[13].uv = Vector2(p16, 1.f - p8);
 	c->vertices[14].uv = Vector2(p8 + p16, 1.f - p8);
 	c->vertices[15].uv = Vector2(p8 + p16, 1.f - p16);
-	c->vertices[20].uv = Vector2(p8, 1.f - p8);
-	c->vertices[21].uv = Vector2(p8, 1.f);
-	c->vertices[22].uv = Vector2(p16, 1.f);
-	c->vertices[23].uv = Vector2(p16, 1.f - p8);
-	c->vertices[16].uv = Vector2(p16, 1.f - p8); 
-	c->vertices[17].uv = Vector2(p16, 1.f);
-	c->vertices[18].uv = Vector2(p8 + p16, 1.f);
-	c->vertices[19].uv = Vector2(p8 + p16, 1.f - p8);
+	c->vertices[16].uv = Vector2(p8, 1.f - p8);
+	c->vertices[17].uv = Vector2(p8, 1.f);
+	c->vertices[18].uv = Vector2(p16, 1.f);
+	c->vertices[19].uv = Vector2(p16, 1.f - p8);
+	c->vertices[20].uv = Vector2(p16, 1.f - p8); 
+	c->vertices[21].uv = Vector2(p16, 1.f);
+	c->vertices[22].uv = Vector2(p8 + p16, 1.f);
+	c->vertices[23].uv = Vector2(p8 + p16, 1.f - p8);
 	c->texture = new Image(".\\Textures\\Steve.bmp");
 
 	mainCam->transform.position = Vector3(0, 0, -10);
@@ -134,20 +135,38 @@ void Update()
 	float curTime = clock();
 	float deltaTime = (curTime - oldTime)/CLOCKS_PER_SEC;
 
-	if (GetAsyncKeyState('W'))
-		mainCam->transform.Translate(Vector3::up, 1.0f);// *deltaTime);
-	if (GetAsyncKeyState('S'))
-		mainCam->transform.Translate(Vector3::down, 1.0f);// *deltaTime);
-	if (GetAsyncKeyState('A'))
-		mainCam->transform.Translate(Vector3::left, 1.0f);// *deltaTime);
-	if (GetAsyncKeyState('D'))
-		mainCam->transform.Translate(Vector3::right, 1.0f);// *deltaTime);
-	if (GetAsyncKeyState('Q'))
-		mainCam->transform.Translate(Vector3::forward, 1.0f);// *deltaTime);
-	if (GetAsyncKeyState('E'))
-		mainCam->transform.Translate(Vector3::backward, 1.0f);// *deltaTime);
+	if (GetAsyncKeyState(VK_LSHIFT))
+	{
+		if (GetAsyncKeyState('W'))
+			mainCam->transform.Rotate(-mainCam->transform.right);
+		if (GetAsyncKeyState('S'))
+			mainCam->transform.Rotate(mainCam->transform.right);
+		if (GetAsyncKeyState('A'))
+			mainCam->transform.Rotate(-mainCam->transform.up);
+		if (GetAsyncKeyState('D'))
+			mainCam->transform.Rotate(mainCam->transform.up);
+		if (GetAsyncKeyState('Q'))
+			mainCam->transform.Rotate(mainCam->transform.forward);
+		if (GetAsyncKeyState('E'))
+			mainCam->transform.Rotate(-mainCam->transform.forward);
+	}
+	else
+	{
+		if (GetAsyncKeyState('W'))
+			mainCam->transform.Translate(mainCam->transform.up, 1.0f);// *deltaTime);
+		if (GetAsyncKeyState('S'))
+			mainCam->transform.Translate(-mainCam->transform.up, 1.0f);// *deltaTime);
+		if (GetAsyncKeyState('A'))
+			mainCam->transform.Translate(-mainCam->transform.right, 1.0f);// *deltaTime);
+		if (GetAsyncKeyState('D'))
+			mainCam->transform.Translate(mainCam->transform.right, 1.0f);// *deltaTime);
+		if (GetAsyncKeyState('Q'))
+			mainCam->transform.Translate(mainCam->transform.forward, 1.0f);// *deltaTime);
+		if (GetAsyncKeyState('E'))
+			mainCam->transform.Translate(-mainCam->transform.forward, 1.0f);// *deltaTime);
+	}
 
-	renderList[0]->transform->Rotate(Vector3(1.f, 0.f, 0));
+	//renderList[0]->transform->Rotate(Vector3(0.f, 1.f, 0));
 	//renderList[0]->transform->Translate(Vector3(1.f, 0.f, 0), 1.0f);
 
 	oldTime = curTime;
@@ -172,6 +191,17 @@ void Render()
 	//DrawTriangleV2(bb, v1, v2, v3);
 	
 	Matrix4x4 mvp = mainCam->GetProjectionMatrix() * mainCam->GetViewMatrix() * worldMatrix;
+
+	//Vertex v1(-1, -1, -.5f, 0), v2(-1, 1, -0.5f, 0), v3(0, 1, 1.f, 0);
+	//Vertex v4(0, 0, -.4, 255), v5(0, 2, -.4, 255), v6(0, 0, 0, 255);
+	//v1 = mvp * v1;
+	//v2 = mvp * v2;
+	//v3 = mvp * v3;
+	//v4 = mvp * v4;
+	//v5 = mvp * v5;
+	//v6 = mvp * v6;
+	//DrawTriangleV2(buffer, v1, v2, v3);
+	//DrawTriangleV2(buffer, v4, v5, v6);
 
 	for (int i = 0; i < renderList.size(); i++)
 	{

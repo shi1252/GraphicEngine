@@ -13,6 +13,10 @@ public:
 	HookVariable<Vector3> rotation;
 	HookVariable<Vector3> scale;
 
+	Vector3 right;
+	Vector3 up;
+	Vector3 forward;
+
 	Transform();
 	Transform(const Transform &t);
 	~Transform();
@@ -23,5 +27,7 @@ public:
 	Matrix4x4 GetMatrix();
 	Matrix4x4 GetInverseMatrix();
 private:
+	void SetHook();
 	void ValueChanged();
+	void RotationChanged();
 };

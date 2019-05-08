@@ -29,6 +29,6 @@ Vector2 Vertex::InterpUV(Vertex v1, Vertex v2, Vertex v3, Vector4 p)
 	//}
 	float z = 1.f / (out.x / v1.position.w + out.y / v2.position.w + out.z / v3.position.w);
 	Vector2 t = z * (v1.uv * out.x / v1.position.w + v2.uv * out.y / v2.position.w + v3.uv * out.z / v3.position.w);
-	Vector2 ss = (v1.uv * out.x + v2.uv * out.y + v3.uv * out.z);
+	//Vector2 ss = (v1.uv * out.x + v2.uv * out.y + v3.uv * out.z);
 	return t;//(v1.uv * out.x + v2.uv * out.y + v3.uv * out.z);
 }

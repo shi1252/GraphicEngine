@@ -5,11 +5,10 @@
 
 Transform::Transform()
 {
+	SetHook();
+
 	position = Vector3::zero;
 	rotation = Vector3::zero;
-	position.SetHook(std::bind(&Transform::ValueChanged, this));
-	rotation.SetHook(std::bind(&Transform::ValueChanged, this));
-	scale.SetHook(std::bind(&Transform::ValueChanged, this));
 	scale = Vector3::one;
 }
 
@@ -51,8 +50,26 @@ Matrix4x4 Transform::GetInverseMatrix()
 	return invMatrix;
 }
 
+void Transform::SetHook()
+{
+	position.SetHook(std::bind(&Transform::ValueChanged, this));
+	rotation.SetHook(std::bind(&Transform::RotationChanged, this));
+	scale.SetHook(std::bind(&Transform::ValueChanged, this));
+}
+
 void Transform::ValueChanged()
 {
 	matrix = Matrix4x4::TRSMatrix(position, rotation, scale);
 	invMatrix = Matrix4x4::InverseTRSMatrix(position, rotation, scale);
+}
+
+void Transform::RotationChanged()
+{
+	ValueChanged();
+
+	Matrix4x4 rot = Matrix4x4::YXZRotateMatrix(rotation);
+
+	right = rot * Vector3::right;
+	up = rot * Vector3::up;
+	forward = rot * Vector3::forward;
 }

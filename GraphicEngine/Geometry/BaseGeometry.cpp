@@ -1,6 +1,8 @@
 #include "BaseGeometry.h"
 #include "..\Math\Transform.h"
 #include "..\Math\Matrix4x4.h"
+#include "..\Framework\Image.h"
+#include "..\Draw\Draw.h"
 
 BaseGeometry::BaseGeometry(const BaseGeometry & copy)
 {
@@ -26,11 +28,11 @@ void BaseGeometry::Draw(BitmapBuffer *bb, Matrix4x4 &worldViewProj)
 	if (!texture)
 	{
 		for (int i = 0; i < indexCount; i += 3)
-			DrawTriangleV2Color(bb, mat * vertices[indices[i]], mat * vertices[indices[i + 1]], mat * vertices[indices[i + 2]]);
+			DrawTriangleV2(bb, mat * vertices[indices[i]], mat * vertices[indices[i + 1]], mat * vertices[indices[i + 2]]);
 	}
 	else
 	{
 		for (int i = 0; i < indexCount; i += 3)
-			DrawTriangleV2Texture(bb, mat * vertices[indices[i]], mat * vertices[indices[i + 1]], mat * vertices[indices[i + 2]], texture);
+			DrawTriangleV2(bb, mat * vertices[indices[i]], mat * vertices[indices[i + 1]], mat * vertices[indices[i + 2]], texture);
 	}
 }

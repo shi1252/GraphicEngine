@@ -6,8 +6,8 @@
 BitmapBuffer::BitmapBuffer(HWND hWnd, UINT width, UINT height, DWORD bgColor):
 	hWnd(hWnd), width(width), height(height), bgColor(bgColor & 0x00ffffff), scanlineCount(width * 3 + ((width * 3) & 3))
 {
-	minDepth = 0.1f;
-	maxDepth = 1000.f;
+	minDepth = 0.f;
+	maxDepth = 1.f;
 	depthBuffer = new float[width * height];
 
 	hdc = GetDC(hWnd);

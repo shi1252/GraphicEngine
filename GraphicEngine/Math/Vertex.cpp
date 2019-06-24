@@ -32,3 +32,11 @@ Vector2 Vertex::InterpUV(Vertex v1, Vertex v2, Vertex v3, Vector4 p)
 	//Vector2 ss = (v1.uv * out.x + v2.uv * out.y + v3.uv * out.z);
 	return t;//(v1.uv * out.x + v2.uv * out.y + v3.uv * out.z);
 }
+
+bool Vertex::BackfaceCulling(Vertex v1, Vertex v2, Vertex v3)
+{
+	Vector3 bc1 = v2.position - v1.position;
+	Vector3 bc2 = v3.position - v1.position;
+	if (bc1.Cross(bc2).Dot(Vector3::forward) > 0) 
+		return true;
+}

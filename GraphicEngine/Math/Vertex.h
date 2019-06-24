@@ -23,4 +23,5 @@ public:
 
 	static DWORD InterpColor(Vertex v1, Vertex v2, Vertex v3, Vector3 p);
 	static Vector2 InterpUV(Vertex v1, Vertex v2, Vertex v3, Vector4 p);
+	static bool BackfaceCulling(Vertex v1, Vertex v2, Vertex v3);
 };

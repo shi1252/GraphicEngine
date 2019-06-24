@@ -150,6 +150,7 @@
     <ClCompile Include="Math\Transform.cpp" />
     <ClCompile Include="Math\Vector.cpp" />
     <ClCompile Include="Math\Vertex.cpp" />
+    <ClCompile Include="Render\Render.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Buffer\BitmapBuffer.h" />
@@ -170,6 +171,7 @@
     <ClInclude Include="Math\Vector.h" />
     <ClInclude Include="Math\Vertex.h" />
     <ClInclude Include="RenderSetting.h" />
+    <ClInclude Include="Render\Render.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Textures\Steve.bmp" />

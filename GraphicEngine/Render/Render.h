@@ -2,6 +2,6 @@
 class BaseGeometry;
 class Vertex;
 
-void DrawCall(BaseGeometry *mesh);
+void DrawCall(BaseGeometry* mesh);
 Vertex VertexShader(Vertex v);
-DWORD FragmentShader(Frag f);
+//DWORD FragmentShader(Frag f);

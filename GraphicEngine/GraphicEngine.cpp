@@ -2,9 +2,9 @@
 #include "GraphicEngine.h"
 #include <time.h>
 
-BitmapBuffer *buffer;
+BitmapBuffer* buffer;
 
-Camera *mainCam;
+Camera* mainCam;
 
 static Matrix4x4 worldMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 static std::vector<BaseGeometry*> renderList;
@@ -21,7 +21,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 {
 	LPCTSTR szWndAppName = TEXT("GraphicEngine");
 
-	WNDCLASSEX wc = {sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0, 0, GetModuleHandle(NULL), NULL, NULL, NULL, NULL, szWndAppName, NULL};
+	WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0, 0, GetModuleHandle(NULL), NULL, NULL, NULL, NULL, szWndAppName, NULL };
 	RegisterClassEx(&wc);
 
 	HWND hWnd;
@@ -84,8 +84,8 @@ void Init()
 	mainCam = new Camera();
 	//buffer->SetDepthDefault(mainCam->near_Plane, mainCam->far_Plane);
 
-	PlaneGeometry *p = new PlaneGeometry(10, 10);
-	CubeGeometry *c = new CubeGeometry(1, 1, 1);
+	PlaneGeometry* p = new PlaneGeometry(10, 10);
+	CubeGeometry* c = new CubeGeometry(1, 1, 1);
 	//renderList.push_back(p);
 	renderList.push_back(c);
 
@@ -121,7 +121,7 @@ void Init()
 	c->vertices[17].uv = Vector2(p8, 1.f);
 	c->vertices[18].uv = Vector2(p16, 1.f);
 	c->vertices[19].uv = Vector2(p16, 1.f - p8);
-	c->vertices[20].uv = Vector2(p16, 1.f - p8); 
+	c->vertices[20].uv = Vector2(p16, 1.f - p8);
 	c->vertices[21].uv = Vector2(p16, 1.f);
 	c->vertices[22].uv = Vector2(p8 + p16, 1.f);
 	c->vertices[23].uv = Vector2(p8 + p16, 1.f - p8);
@@ -133,7 +133,7 @@ void Init()
 void Update()
 {
 	float curTime = clock();
-	float deltaTime = (curTime - oldTime)/CLOCKS_PER_SEC;
+	float deltaTime = (curTime - oldTime) / CLOCKS_PER_SEC;
 
 	if (GetAsyncKeyState(VK_LSHIFT))
 	{
@@ -153,17 +153,17 @@ void Update()
 	else
 	{
 		if (GetAsyncKeyState('W'))
-			mainCam->transform.Translate(mainCam->transform.up, 1.0f);// *deltaTime);
+			mainCam->transform.Translate(mainCam->transform.up, 5.0f * deltaTime);
 		if (GetAsyncKeyState('S'))
-			mainCam->transform.Translate(-mainCam->transform.up, 1.0f);// *deltaTime);
+			mainCam->transform.Translate(-mainCam->transform.up, 5.0f * deltaTime);
 		if (GetAsyncKeyState('A'))
-			mainCam->transform.Translate(-mainCam->transform.right, 1.0f);// *deltaTime);
+			mainCam->transform.Translate(-mainCam->transform.right, 5.0f * deltaTime);
 		if (GetAsyncKeyState('D'))
-			mainCam->transform.Translate(mainCam->transform.right, 1.0f);// *deltaTime);
+			mainCam->transform.Translate(mainCam->transform.right, 5.0f * deltaTime);
 		if (GetAsyncKeyState('Q'))
-			mainCam->transform.Translate(mainCam->transform.forward, 1.0f);// *deltaTime);
+			mainCam->transform.Translate(mainCam->transform.forward, 5.0f * deltaTime);
 		if (GetAsyncKeyState('E'))
-			mainCam->transform.Translate(-mainCam->transform.forward, 1.0f);// *deltaTime);
+			mainCam->transform.Translate(-mainCam->transform.forward, 5.0f * deltaTime);
 	}
 
 	//renderList[0]->transform->Rotate(Vector3(0.f, 1.f, 0));
@@ -189,7 +189,7 @@ void Render()
 	// Call DrawFunction
 	//Vertex v1(-0.1.f, 0.1.f, 0, RGB(255, 0, 0)), v2(-0.1.f, -0.1.f, 0, RGB(0, 255, 0)), v3(0, 0, 0, RGB(0, 0, 255));
 	//DrawTriangleV2(bb, v1, v2, v3);
-	
+
 	Matrix4x4 mvp = mainCam->GetProjectionMatrix() * mainCam->GetViewMatrix() * worldMatrix;
 
 	//Vertex v1(-1, -1, -.5f, 0), v2(-1, 1, -0.5f, 0), v3(0, 1, 1.f, 0);
